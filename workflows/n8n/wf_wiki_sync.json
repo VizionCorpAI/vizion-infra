@@ -1,0 +1,34 @@
+{
+  "name": "wf_wiki_sync",
+  "nodes": [
+    {
+      "parameters": {"path": "vizion/infra/wiki-sync", "httpMethod": "POST", "responseMode": "lastNode", "options": {}},
+      "id": "webhook",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {"command": "cd /root/VizionAI/WORKSPACES/vizion-infra && ./scripts/wiki_sync.sh 2>&1"},
+      "id": "exec",
+      "name": "Sync Wiki",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [480, 300]
+    },
+    {
+      "parameters": {"responseBody": "={{ { ok: true, output: $json.stdout ? $json.stdout.slice(-500) : 'done' } }}", "options": {}},
+      "id": "resp",
+      "name": "Respond",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [720, 300]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {"main": [[{"node": "Sync Wiki", "type": "main", "index": 0}]]},
+    "Sync Wiki": {"main": [[{"node": "Respond", "type": "main", "index": 0}]]}
+  },
+  "settings": {"executionOrder": "v1"}
+}
