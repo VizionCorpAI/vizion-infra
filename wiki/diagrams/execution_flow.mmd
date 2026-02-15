@@ -1,0 +1,7 @@
+flowchart LR
+  CHAT[User/Operator] --> OC[OpenClaw]
+  OC --> PLATFORM[vizion-platform]
+  PLATFORM --> TASKS[platform_task]
+  TASKS --> ALERTS[alert_event]
+  ALERTS --> FANOUT[vizion-alert-reporting]
+  FANOUT --> N8N[n8n]
