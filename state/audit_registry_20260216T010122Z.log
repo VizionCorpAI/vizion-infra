@@ -1,0 +1,54 @@
+=== Registry Consistency Audit 2026-02-16T01:01:22Z ===
+
+--- Filesystem Workspaces ---
+  vizion-agent-builder
+  vizion-alert-reporting
+  vizion-analytics
+  vizion-infra
+  vizion-maintenance
+  vizion-marketing
+  vizion-platform
+  vizion-scheduling
+  vizion-security
+  vizion-trading
+  Total: 10
+
+--- CSV Registry ---
+  trading -> vizion-trading (/root/VizionAI/WORKSPACES/vizion-trading)
+  scheduling -> vizion-scheduling (/root/VizionAI/WORKSPACES/vizion-scheduling)
+  marketing -> vizion-marketing (/root/VizionAI/WORKSPACES/vizion-marketing)
+  agent_builder -> vizion-agent-builder (/root/VizionAI/WORKSPACES/vizion-agent-builder)
+  analytics -> vizion-analytics (/root/VizionAI/WORKSPACES/vizion-analytics)
+  maintenance -> vizion-maintenance (/root/VizionAI/WORKSPACES/vizion-maintenance)
+  alert_reporting -> vizion-alert-reporting (/root/VizionAI/WORKSPACES/vizion-alert-reporting)
+  infra -> vizion-infra (/root/VizionAI/WORKSPACES/vizion-infra)
+  security -> vizion-security (/root/VizionAI/WORKSPACES/vizion-security)
+  Total: 9
+
+--- DB Registry (workspace_repo_registry) ---
+  Total: 0
+
+--- OpenClaw Skills ---
+  metals-desk-os
+  vizion-agent-builder
+  vizion-alert-reporting
+  vizion-analytics
+  vizion-infra
+  vizion-maintenance
+  vizion-marketing
+  vizion-nn
+  vizion-platform
+  vizion-scheduling
+  vizion-security
+  vizion-trading
+  Total: 12
+
+--- Cross-Reference Issues ---
+  EXTRA SKILL: metals-desk-os (no matching workspace dir — may be standalone)
+  EXTRA SKILL: vizion-nn (no matching workspace dir — may be standalone)
+
+--- Dependency Validation ---
+  Dependencies: 26 entries
+  Dependencies file validated.
+
+=== Issues found: 0 ===

@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>VizionAI Architecture Audit (2026-02-15)</title>
+  <title>VizionAI Architecture Audit (2026-02-16)</title>
   <style>
     body { font-family: Arial, sans-serif; line-height: 1.35; margin: 28px; color: #111; }
     h1,h2,h3 { margin: 0.6em 0 0.2em; }
@@ -18,7 +18,7 @@
 <body>
   <h1>VizionAI Architecture Audit</h1>
   <div class="meta">
-    Date (UTC): <b>2026-02-15</b><br/>
+    Date (UTC): <b>2026-02-16</b><br/>
     Host: <code>srv1079950</code><br/>
     Scope: Workspaces, orchestration, containers, ports, and registry alignment.
   </div>
@@ -64,13 +64,13 @@
 
   <h2>Listening Ports</h2>
   <pre>Cannot open netlink socket: Operation not permitted
-5:LISTEN 0      0            0.0.0.0:8000       0.0.0.0:*          
-6:LISTEN 0      0            0.0.0.0:48950      0.0.0.0:*          
-8:LISTEN 0      0            0.0.0.0:32770      0.0.0.0:*          
-9:LISTEN 0      0            0.0.0.0:32769      0.0.0.0:*          
-14:LISTEN 0      0                  *:48950            *:*          
-15:LISTEN 0      0                  *:32770            *:*          
-16:LISTEN 0      0                  *:32769            *:*          </pre>
+4:LISTEN 0      0            0.0.0.0:32768      0.0.0.0:*          
+5:LISTEN 0      0            0.0.0.0:32769      0.0.0.0:*          
+9:LISTEN 0      0            0.0.0.0:48950      0.0.0.0:*          
+10:LISTEN 0      0            0.0.0.0:8000       0.0.0.0:*          
+13:LISTEN 0      0                  *:32768            *:*          
+14:LISTEN 0      0                  *:32769            *:*          
+18:LISTEN 0      0                  *:48950            *:*          </pre>
 
   <h2>Health Checks</h2>
   <div class="box">
@@ -103,52 +103,52 @@
   <pre>== vizion-agent-builder ==
 remote=git@github.com:VizionCorpAI/vizion-agent-builder.git
 branch=main
-dirty=1
+dirty=2
 
 == vizion-alert-reporting ==
 remote=git@github.com:VizionCorpAI/vizion-alert-reporting.git
 branch=main
-dirty=1
+dirty=2
 
 == vizion-analytics ==
 remote=git@github.com:VizionCorpAI/vizion-analytics.git
 branch=main
-dirty=2
+dirty=3
 
 == vizion-infra ==
 remote=git@github.com:VizionCorpAI/vizion-infra.git
 branch=main
-dirty=20
+dirty=38
 
 == vizion-maintenance ==
 remote=git@github.com:VizionCorpAI/vizion-maintenance.git
 branch=main
-dirty=1
+dirty=17
 
 == vizion-marketing ==
 remote=git@github.com:VizionCorpAI/vizion-marketing.git
 branch=main
-dirty=3
+dirty=4
 
 == vizion-platform ==
 remote=git@github.com:VizionCorpAI/vizion-platform.git
 branch=main
-dirty=8
+dirty=0
 
 == vizion-scheduling ==
 remote=git@github.com:VizionCorpAI/vizion-scheduling.git
 branch=main
-dirty=0
+dirty=3
 
 == vizion-security ==
 remote=git@github.com:VizionCorpAI/vizion-security.git
 branch=main
-dirty=2
+dirty=3
 
 == vizion-trading ==
 remote=git@github.com:VizionCorpAI/vizion-trading.git
 branch=main
-dirty=3</pre>
+dirty=4</pre>
 
   <h2>Registry Alignment</h2>
   <div class="box warn">

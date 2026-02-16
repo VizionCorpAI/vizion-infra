@@ -1,0 +1,200 @@
+Feb 15 16:28:46 srv1079950 systemd[1]: vizion-scheduling-runner.service: Deactivated successfully.
+Feb 15 16:28:46 srv1079950 systemd[1]: Finished vizion-scheduling-runner.service - Vizion Scheduling Runner (tick).
+Feb 15 16:28:46 srv1079950 systemd[1]: vizion-scheduling-runner.service: Consumed 24.133s CPU time.
+Feb 15 16:28:46 srv1079950 systemd[1]: Starting vizion-scheduling-runner.service - Vizion Scheduling Runner (tick)...
+Feb 15 16:37:35 srv1079950 systemd[1]: vizion-scheduling-runner.service: Deactivated successfully.
+Feb 15 16:37:35 srv1079950 systemd[1]: Finished vizion-scheduling-runner.service - Vizion Scheduling Runner (tick).
+Feb 15 16:37:35 srv1079950 systemd[1]: vizion-scheduling-runner.service: Consumed 51.709s CPU time.
+Feb 15 16:37:35 srv1079950 systemd[1]: Starting vizion-scheduling-runner.service - Vizion Scheduling Runner (tick)...
+Feb 15 16:41:22 srv1079950 systemd[1]: vizion-scheduling-runner.service: Deactivated successfully.
+Feb 15 16:41:22 srv1079950 systemd[1]: Finished vizion-scheduling-runner.service - Vizion Scheduling Runner (tick).
+Feb 15 16:41:22 srv1079950 systemd[1]: vizion-scheduling-runner.service: Consumed 22.715s CPU time.
+Feb 15 16:41:22 srv1079950 systemd[1]: Starting vizion-scheduling-runner.service - Vizion Scheduling Runner (tick)...
+Feb 15 16:42:43 srv1079950 systemd[1]: vizion-scheduling-runner.service: Deactivated successfully.
+Feb 15 16:42:43 srv1079950 systemd[1]: Finished vizion-scheduling-runner.service - Vizion Scheduling Runner (tick).
+Feb 15 16:42:43 srv1079950 systemd[1]: vizion-scheduling-runner.service: Consumed 4.965s CPU time.
+Feb 15 16:42:43 srv1079950 systemd[1]: Starting vizion-scheduling-runner.service - Vizion Scheduling Runner (tick)...
+Feb 15 16:53:47 srv1079950 systemd[1]: vizion-scheduling-runner.service: Deactivated successfully.
+Feb 15 16:53:47 srv1079950 systemd[1]: Finished vizion-scheduling-runner.service - Vizion Scheduling Runner (tick).
+Feb 15 16:53:47 srv1079950 systemd[1]: vizion-scheduling-runner.service: Consumed 53.516s CPU time.
+Feb 15 16:53:48 srv1079950 systemd[1]: Starting vizion-scheduling-runner.service - Vizion Scheduling Runner (tick)...
+Feb 15 16:58:41 srv1079950 systemd[1]: vizion-scheduling-runner.service: Deactivated successfully.
+Feb 15 16:58:41 srv1079950 systemd[1]: Finished vizion-scheduling-runner.service - Vizion Scheduling Runner (tick).
+Feb 15 16:58:41 srv1079950 systemd[1]: vizion-scheduling-runner.service: Consumed 21.769s CPU time.
+Feb 15 16:58:41 srv1079950 systemd[1]: Starting vizion-scheduling-runner.service - Vizion Scheduling Runner (tick)...
+Feb 15 17:04:00 srv1079950 systemd[1]: vizion-scheduling-runner.service: Deactivated successfully.
+Feb 15 17:04:00 srv1079950 systemd[1]: Finished vizion-scheduling-runner.service - Vizion Scheduling Runner (tick).
+Feb 15 17:04:00 srv1079950 systemd[1]: vizion-scheduling-runner.service: Consumed 26.283s CPU time.
+Feb 15 17:04:00 srv1079950 systemd[1]: Starting vizion-scheduling-runner.service - Vizion Scheduling Runner (tick)...
+Feb 15 17:09:18 srv1079950 systemd[1]: vizion-scheduling-runner.service: Deactivated successfully.
+Feb 15 17:09:18 srv1079950 systemd[1]: Finished vizion-scheduling-runner.service - Vizion Scheduling Runner (tick).
+Feb 15 17:09:18 srv1079950 systemd[1]: vizion-scheduling-runner.service: Consumed 25.244s CPU time.
+Feb 15 17:09:19 srv1079950 systemd[1]: Starting vizion-scheduling-runner.service - Vizion Scheduling Runner (tick)...
+Feb 15 17:20:08 srv1079950 systemd[1]: vizion-scheduling-runner.service: Deactivated successfully.
+Feb 15 17:20:08 srv1079950 systemd[1]: Finished vizion-scheduling-runner.service - Vizion Scheduling Runner (tick).
+Feb 15 17:20:08 srv1079950 systemd[1]: vizion-scheduling-runner.service: Consumed 54.249s CPU time.
+Feb 15 17:20:09 srv1079950 systemd[1]: Starting vizion-scheduling-runner.service - Vizion Scheduling Runner (tick)...
+Feb 15 17:25:04 srv1079950 systemd[1]: vizion-scheduling-runner.service: Deactivated successfully.
+Feb 15 17:25:04 srv1079950 systemd[1]: Finished vizion-scheduling-runner.service - Vizion Scheduling Runner (tick).
+Feb 15 17:25:04 srv1079950 systemd[1]: vizion-scheduling-runner.service: Consumed 23.130s CPU time.
+Feb 15 17:25:04 srv1079950 systemd[1]: Starting vizion-scheduling-runner.service - Vizion Scheduling Runner (tick)...
+Feb 15 17:35:51 srv1079950 systemd[1]: vizion-scheduling-runner.service: Deactivated successfully.
+Feb 15 17:35:51 srv1079950 systemd[1]: Finished vizion-scheduling-runner.service - Vizion Scheduling Runner (tick).
+Feb 15 17:35:51 srv1079950 systemd[1]: vizion-scheduling-runner.service: Consumed 1min 188ms CPU time.
+Feb 15 17:35:52 srv1079950 systemd[1]: Starting vizion-scheduling-runner.service - Vizion Scheduling Runner (tick)...
+Feb 15 17:38:51 srv1079950 systemd[1]: vizion-scheduling-runner.service: Deactivated successfully.
+Feb 15 17:38:51 srv1079950 systemd[1]: Finished vizion-scheduling-runner.service - Vizion Scheduling Runner (tick).
+Feb 15 17:38:51 srv1079950 systemd[1]: vizion-scheduling-runner.service: Consumed 9.889s CPU time.
+Feb 15 17:38:52 srv1079950 systemd[1]: Starting vizion-scheduling-runner.service - Vizion Scheduling Runner (tick)...
+Feb 15 17:40:17 srv1079950 systemd[1]: vizion-scheduling-runner.service: Deactivated successfully.
+Feb 15 17:40:17 srv1079950 systemd[1]: Finished vizion-scheduling-runner.service - Vizion Scheduling Runner (tick).
+Feb 15 17:40:17 srv1079950 systemd[1]: vizion-scheduling-runner.service: Consumed 4.203s CPU time.
+Feb 15 17:40:17 srv1079950 systemd[1]: Starting vizion-scheduling-runner.service - Vizion Scheduling Runner (tick)...
+Feb 15 17:50:27 srv1079950 systemd[1]: vizion-scheduling-runner.service: Deactivated successfully.
+Feb 15 17:50:27 srv1079950 systemd[1]: Finished vizion-scheduling-runner.service - Vizion Scheduling Runner (tick).
+Feb 15 17:50:27 srv1079950 systemd[1]: vizion-scheduling-runner.service: Consumed 56.376s CPU time.
+Feb 15 17:50:28 srv1079950 systemd[1]: Starting vizion-scheduling-runner.service - Vizion Scheduling Runner (tick)...
+Feb 15 17:55:22 srv1079950 systemd[1]: vizion-scheduling-runner.service: Deactivated successfully.
+Feb 15 17:55:22 srv1079950 systemd[1]: Finished vizion-scheduling-runner.service - Vizion Scheduling Runner (tick).
+Feb 15 17:55:23 srv1079950 systemd[1]: vizion-scheduling-runner.service: Consumed 22.844s CPU time.
+Feb 15 17:55:23 srv1079950 systemd[1]: Starting vizion-scheduling-runner.service - Vizion Scheduling Runner (tick)...
+Feb 15 18:07:44 srv1079950 systemd[1]: vizion-scheduling-runner.service: Deactivated successfully.
+Feb 15 18:07:44 srv1079950 systemd[1]: Finished vizion-scheduling-runner.service - Vizion Scheduling Runner (tick).
+Feb 15 18:07:44 srv1079950 systemd[1]: vizion-scheduling-runner.service: Consumed 1min 10.477s CPU time.
+Feb 15 18:07:44 srv1079950 systemd[1]: Starting vizion-scheduling-runner.service - Vizion Scheduling Runner (tick)...
+Feb 15 18:12:35 srv1079950 systemd[1]: vizion-scheduling-runner.service: Deactivated successfully.
+Feb 15 18:12:35 srv1079950 systemd[1]: Finished vizion-scheduling-runner.service - Vizion Scheduling Runner (tick).
+Feb 15 18:12:35 srv1079950 systemd[1]: vizion-scheduling-runner.service: Consumed 25.616s CPU time.
+Feb 15 18:12:35 srv1079950 systemd[1]: Starting vizion-scheduling-runner.service - Vizion Scheduling Runner (tick)...
+Feb 15 18:22:28 srv1079950 systemd[1]: vizion-scheduling-runner.service: Deactivated successfully.
+Feb 15 18:22:28 srv1079950 systemd[1]: Finished vizion-scheduling-runner.service - Vizion Scheduling Runner (tick).
+Feb 15 18:22:28 srv1079950 systemd[1]: vizion-scheduling-runner.service: Consumed 51.913s CPU time.
+Feb 15 18:22:28 srv1079950 systemd[1]: Starting vizion-scheduling-runner.service - Vizion Scheduling Runner (tick)...
+Feb 15 18:27:06 srv1079950 systemd[1]: vizion-scheduling-runner.service: Deactivated successfully.
+Feb 15 18:27:06 srv1079950 systemd[1]: Finished vizion-scheduling-runner.service - Vizion Scheduling Runner (tick).
+Feb 15 18:27:06 srv1079950 systemd[1]: vizion-scheduling-runner.service: Consumed 24.256s CPU time.
+Feb 15 18:27:06 srv1079950 systemd[1]: Starting vizion-scheduling-runner.service - Vizion Scheduling Runner (tick)...
+Feb 15 18:37:07 srv1079950 systemd[1]: vizion-scheduling-runner.service: Deactivated successfully.
+Feb 15 18:37:07 srv1079950 systemd[1]: Finished vizion-scheduling-runner.service - Vizion Scheduling Runner (tick).
+Feb 15 18:37:07 srv1079950 systemd[1]: vizion-scheduling-runner.service: Consumed 55.160s CPU time.
+Feb 15 18:37:07 srv1079950 systemd[1]: Starting vizion-scheduling-runner.service - Vizion Scheduling Runner (tick)...
+Feb 15 18:42:38 srv1079950 systemd[1]: vizion-scheduling-runner.service: Deactivated successfully.
+Feb 15 18:42:38 srv1079950 systemd[1]: Finished vizion-scheduling-runner.service - Vizion Scheduling Runner (tick).
+Feb 15 18:42:38 srv1079950 systemd[1]: vizion-scheduling-runner.service: Consumed 31.485s CPU time.
+Feb 15 18:42:38 srv1079950 systemd[1]: Starting vizion-scheduling-runner.service - Vizion Scheduling Runner (tick)...
+Feb 15 18:54:04 srv1079950 systemd[1]: vizion-scheduling-runner.service: Deactivated successfully.
+Feb 15 18:54:04 srv1079950 systemd[1]: Finished vizion-scheduling-runner.service - Vizion Scheduling Runner (tick).
+Feb 15 18:54:04 srv1079950 systemd[1]: vizion-scheduling-runner.service: Consumed 58.826s CPU time.
+Feb 15 18:54:05 srv1079950 systemd[1]: Starting vizion-scheduling-runner.service - Vizion Scheduling Runner (tick)...
+Feb 15 18:59:08 srv1079950 systemd[1]: vizion-scheduling-runner.service: Deactivated successfully.
+Feb 15 18:59:08 srv1079950 systemd[1]: Finished vizion-scheduling-runner.service - Vizion Scheduling Runner (tick).
+Feb 15 18:59:08 srv1079950 systemd[1]: vizion-scheduling-runner.service: Consumed 26.635s CPU time.
+Feb 15 18:59:08 srv1079950 systemd[1]: Starting vizion-scheduling-runner.service - Vizion Scheduling Runner (tick)...
+Feb 15 19:09:08 srv1079950 systemd[1]: vizion-scheduling-runner.service: Deactivated successfully.
+Feb 15 19:09:08 srv1079950 systemd[1]: Finished vizion-scheduling-runner.service - Vizion Scheduling Runner (tick).
+Feb 15 19:09:08 srv1079950 systemd[1]: vizion-scheduling-runner.service: Consumed 49.126s CPU time.
+Feb 15 19:09:08 srv1079950 systemd[1]: Starting vizion-scheduling-runner.service - Vizion Scheduling Runner (tick)...
+Feb 15 19:13:42 srv1079950 systemd[1]: vizion-scheduling-runner.service: Deactivated successfully.
+Feb 15 19:13:42 srv1079950 systemd[1]: Finished vizion-scheduling-runner.service - Vizion Scheduling Runner (tick).
+Feb 15 19:13:42 srv1079950 systemd[1]: vizion-scheduling-runner.service: Consumed 24.778s CPU time.
+Feb 15 19:13:42 srv1079950 systemd[1]: Starting vizion-scheduling-runner.service - Vizion Scheduling Runner (tick)...
+Feb 15 19:23:28 srv1079950 systemd[1]: vizion-scheduling-runner.service: Deactivated successfully.
+Feb 15 19:23:28 srv1079950 systemd[1]: Finished vizion-scheduling-runner.service - Vizion Scheduling Runner (tick).
+Feb 15 19:23:28 srv1079950 systemd[1]: vizion-scheduling-runner.service: Consumed 50.345s CPU time.
+Feb 15 19:23:28 srv1079950 systemd[1]: Starting vizion-scheduling-runner.service - Vizion Scheduling Runner (tick)...
+Feb 15 19:27:35 srv1079950 systemd[1]: vizion-scheduling-runner.service: Deactivated successfully.
+Feb 15 19:27:35 srv1079950 systemd[1]: Finished vizion-scheduling-runner.service - Vizion Scheduling Runner (tick).
+Feb 15 19:27:35 srv1079950 systemd[1]: vizion-scheduling-runner.service: Consumed 23.736s CPU time.
+Feb 15 19:27:35 srv1079950 systemd[1]: Starting vizion-scheduling-runner.service - Vizion Scheduling Runner (tick)...
+Feb 15 19:28:54 srv1079950 systemd[1]: vizion-scheduling-runner.service: Deactivated successfully.
+Feb 15 19:28:55 srv1079950 systemd[1]: Finished vizion-scheduling-runner.service - Vizion Scheduling Runner (tick).
+Feb 15 19:28:55 srv1079950 systemd[1]: vizion-scheduling-runner.service: Consumed 6.230s CPU time.
+Feb 15 19:28:55 srv1079950 systemd[1]: Starting vizion-scheduling-runner.service - Vizion Scheduling Runner (tick)...
+Feb 15 19:34:10 srv1079950 systemd[1]: vizion-scheduling-runner.service: Deactivated successfully.
+Feb 15 19:34:10 srv1079950 systemd[1]: Finished vizion-scheduling-runner.service - Vizion Scheduling Runner (tick).
+Feb 15 19:34:10 srv1079950 systemd[1]: vizion-scheduling-runner.service: Consumed 25.100s CPU time.
+Feb 15 19:34:10 srv1079950 systemd[1]: Starting vizion-scheduling-runner.service - Vizion Scheduling Runner (tick)...
+Feb 15 19:38:48 srv1079950 systemd[1]: vizion-scheduling-runner.service: Deactivated successfully.
+Feb 15 19:38:48 srv1079950 systemd[1]: Finished vizion-scheduling-runner.service - Vizion Scheduling Runner (tick).
+Feb 15 19:38:48 srv1079950 systemd[1]: vizion-scheduling-runner.service: Consumed 23.648s CPU time.
+Feb 15 19:38:48 srv1079950 systemd[1]: Starting vizion-scheduling-runner.service - Vizion Scheduling Runner (tick)...
+Feb 15 19:48:25 srv1079950 systemd[1]: vizion-scheduling-runner.service: Deactivated successfully.
+Feb 15 19:48:25 srv1079950 systemd[1]: Finished vizion-scheduling-runner.service - Vizion Scheduling Runner (tick).
+Feb 15 19:48:25 srv1079950 systemd[1]: vizion-scheduling-runner.service: Consumed 51.706s CPU time.
+Feb 15 19:48:25 srv1079950 systemd[1]: Starting vizion-scheduling-runner.service - Vizion Scheduling Runner (tick)...
+Feb 15 19:50:45 srv1079950 systemd[1]: vizion-scheduling-runner.service: Deactivated successfully.
+Feb 15 19:50:45 srv1079950 systemd[1]: Finished vizion-scheduling-runner.service - Vizion Scheduling Runner (tick).
+Feb 15 19:50:45 srv1079950 systemd[1]: vizion-scheduling-runner.service: Consumed 8.627s CPU time.
+Feb 15 19:50:45 srv1079950 systemd[1]: Starting vizion-scheduling-runner.service - Vizion Scheduling Runner (tick)...
+Feb 15 19:52:00 srv1079950 systemd[1]: vizion-scheduling-runner.service: Deactivated successfully.
+Feb 15 19:52:00 srv1079950 systemd[1]: Finished vizion-scheduling-runner.service - Vizion Scheduling Runner (tick).
+Feb 15 19:52:00 srv1079950 systemd[1]: vizion-scheduling-runner.service: Consumed 5.968s CPU time.
+Feb 15 19:52:01 srv1079950 systemd[1]: Starting vizion-scheduling-runner.service - Vizion Scheduling Runner (tick)...
+Feb 15 19:53:19 srv1079950 systemd[1]: vizion-scheduling-runner.service: Deactivated successfully.
+Feb 15 19:53:19 srv1079950 systemd[1]: Finished vizion-scheduling-runner.service - Vizion Scheduling Runner (tick).
+Feb 15 19:53:19 srv1079950 systemd[1]: vizion-scheduling-runner.service: Consumed 5.515s CPU time.
+Feb 15 19:53:19 srv1079950 systemd[1]: Starting vizion-scheduling-runner.service - Vizion Scheduling Runner (tick)...
+Feb 15 20:02:13 srv1079950 systemd[1]: vizion-scheduling-runner.service: Deactivated successfully.
+Feb 15 20:02:13 srv1079950 systemd[1]: Finished vizion-scheduling-runner.service - Vizion Scheduling Runner (tick).
+Feb 15 20:02:13 srv1079950 systemd[1]: vizion-scheduling-runner.service: Consumed 49.347s CPU time.
+Feb 15 20:02:13 srv1079950 systemd[1]: Starting vizion-scheduling-runner.service - Vizion Scheduling Runner (tick)...
+Feb 15 20:06:53 srv1079950 systemd[1]: vizion-scheduling-runner.service: Deactivated successfully.
+Feb 15 20:06:53 srv1079950 systemd[1]: Finished vizion-scheduling-runner.service - Vizion Scheduling Runner (tick).
+Feb 15 20:06:53 srv1079950 systemd[1]: vizion-scheduling-runner.service: Consumed 26.707s CPU time.
+Feb 15 20:06:53 srv1079950 systemd[1]: Starting vizion-scheduling-runner.service - Vizion Scheduling Runner (tick)...
+Feb 15 20:13:48 srv1079950 systemd[1]: vizion-scheduling-runner.service: Deactivated successfully.
+Feb 15 20:13:48 srv1079950 systemd[1]: Finished vizion-scheduling-runner.service - Vizion Scheduling Runner (tick).
+Feb 15 20:13:48 srv1079950 systemd[1]: vizion-scheduling-runner.service: Consumed 27.624s CPU time.
+Feb 15 20:13:48 srv1079950 systemd[1]: Starting vizion-scheduling-runner.service - Vizion Scheduling Runner (tick)...
+Feb 15 20:25:21 srv1079950 systemd[1]: vizion-scheduling-runner.service: Deactivated successfully.
+Feb 15 20:25:21 srv1079950 systemd[1]: Finished vizion-scheduling-runner.service - Vizion Scheduling Runner (tick).
+Feb 15 20:25:21 srv1079950 systemd[1]: vizion-scheduling-runner.service: Consumed 57.365s CPU time.
+Feb 15 20:25:22 srv1079950 systemd[1]: Starting vizion-scheduling-runner.service - Vizion Scheduling Runner (tick)...
+Feb 15 20:33:45 srv1079950 systemd[1]: vizion-scheduling-runner.service: Deactivated successfully.
+Feb 15 20:33:45 srv1079950 systemd[1]: Finished vizion-scheduling-runner.service - Vizion Scheduling Runner (tick).
+Feb 15 20:33:45 srv1079950 systemd[1]: vizion-scheduling-runner.service: Consumed 35.158s CPU time.
+Feb 15 20:33:45 srv1079950 systemd[1]: Starting vizion-scheduling-runner.service - Vizion Scheduling Runner (tick)...
+Feb 15 20:48:55 srv1079950 systemd[1]: vizion-scheduling-runner.service: Deactivated successfully.
+Feb 15 20:48:55 srv1079950 systemd[1]: Finished vizion-scheduling-runner.service - Vizion Scheduling Runner (tick).
+Feb 15 20:48:55 srv1079950 systemd[1]: vizion-scheduling-runner.service: Consumed 59.743s CPU time.
+Feb 15 20:48:55 srv1079950 systemd[1]: Starting vizion-scheduling-runner.service - Vizion Scheduling Runner (tick)...
+Feb 15 21:01:26 srv1079950 systemd[1]: vizion-scheduling-runner.service: Deactivated successfully.
+Feb 15 21:01:26 srv1079950 systemd[1]: Finished vizion-scheduling-runner.service - Vizion Scheduling Runner (tick).
+Feb 15 21:01:26 srv1079950 systemd[1]: vizion-scheduling-runner.service: Consumed 59.919s CPU time.
+Feb 15 21:01:26 srv1079950 systemd[1]: Starting vizion-scheduling-runner.service - Vizion Scheduling Runner (tick)...
+Feb 15 21:06:05 srv1079950 systemd[1]: vizion-scheduling-runner.service: Deactivated successfully.
+Feb 15 21:06:05 srv1079950 systemd[1]: Finished vizion-scheduling-runner.service - Vizion Scheduling Runner (tick).
+Feb 15 21:06:05 srv1079950 systemd[1]: vizion-scheduling-runner.service: Consumed 24.404s CPU time.
+Feb 15 21:06:05 srv1079950 systemd[1]: Starting vizion-scheduling-runner.service - Vizion Scheduling Runner (tick)...
+Feb 15 21:16:49 srv1079950 systemd[1]: vizion-scheduling-runner.service: Deactivated successfully.
+Feb 15 21:16:49 srv1079950 systemd[1]: Finished vizion-scheduling-runner.service - Vizion Scheduling Runner (tick).
+Feb 15 21:16:49 srv1079950 systemd[1]: vizion-scheduling-runner.service: Consumed 59.355s CPU time.
+Feb 15 21:16:50 srv1079950 systemd[1]: Starting vizion-scheduling-runner.service - Vizion Scheduling Runner (tick)...
+Feb 15 21:20:14 srv1079950 systemd[1]: vizion-scheduling-runner.service: Deactivated successfully.
+Feb 15 21:20:14 srv1079950 systemd[1]: Finished vizion-scheduling-runner.service - Vizion Scheduling Runner (tick).
+Feb 15 21:20:14 srv1079950 systemd[1]: vizion-scheduling-runner.service: Consumed 15.183s CPU time.
+Feb 15 21:20:14 srv1079950 systemd[1]: Starting vizion-scheduling-runner.service - Vizion Scheduling Runner (tick)...
+Feb 15 21:21:43 srv1079950 systemd[1]: vizion-scheduling-runner.service: Deactivated successfully.
+Feb 15 21:21:43 srv1079950 systemd[1]: Finished vizion-scheduling-runner.service - Vizion Scheduling Runner (tick).
+Feb 15 21:21:43 srv1079950 systemd[1]: vizion-scheduling-runner.service: Consumed 5.629s CPU time.
+Feb 15 21:21:43 srv1079950 systemd[1]: Starting vizion-scheduling-runner.service - Vizion Scheduling Runner (tick)...
+Feb 15 21:33:22 srv1079950 systemd[1]: vizion-scheduling-runner.service: Deactivated successfully.
+Feb 15 21:33:22 srv1079950 systemd[1]: Finished vizion-scheduling-runner.service - Vizion Scheduling Runner (tick).
+Feb 15 21:33:22 srv1079950 systemd[1]: vizion-scheduling-runner.service: Consumed 59.599s CPU time.
+Feb 15 21:33:22 srv1079950 systemd[1]: Starting vizion-scheduling-runner.service - Vizion Scheduling Runner (tick)...
+Feb 15 21:38:09 srv1079950 systemd[1]: vizion-scheduling-runner.service: Deactivated successfully.
+Feb 15 21:38:09 srv1079950 systemd[1]: Finished vizion-scheduling-runner.service - Vizion Scheduling Runner (tick).
+Feb 15 21:38:09 srv1079950 systemd[1]: vizion-scheduling-runner.service: Consumed 17.787s CPU time.
+Feb 15 21:38:10 srv1079950 systemd[1]: Starting vizion-scheduling-runner.service - Vizion Scheduling Runner (tick)...
+Feb 15 21:53:52 srv1079950 systemd[1]: vizion-scheduling-runner.service: Deactivated successfully.
+Feb 15 21:53:52 srv1079950 systemd[1]: Finished vizion-scheduling-runner.service - Vizion Scheduling Runner (tick).
+Feb 15 21:53:52 srv1079950 systemd[1]: vizion-scheduling-runner.service: Consumed 1min 4.522s CPU time.
+Feb 15 21:53:52 srv1079950 systemd[1]: Starting vizion-scheduling-runner.service - Vizion Scheduling Runner (tick)...
+Feb 15 22:04:35 srv1079950 systemd[1]: vizion-scheduling-runner.service: Deactivated successfully.
+Feb 15 22:04:35 srv1079950 systemd[1]: Finished vizion-scheduling-runner.service - Vizion Scheduling Runner (tick).
+Feb 15 22:04:35 srv1079950 systemd[1]: vizion-scheduling-runner.service: Consumed 56.311s CPU time.
+Feb 15 22:04:35 srv1079950 systemd[1]: Starting vizion-scheduling-runner.service - Vizion Scheduling Runner (tick)...
+Feb 15 22:09:34 srv1079950 systemd[1]: vizion-scheduling-runner.service: Deactivated successfully.
+Feb 15 22:09:34 srv1079950 systemd[1]: Finished vizion-scheduling-runner.service - Vizion Scheduling Runner (tick).
+Feb 15 22:09:34 srv1079950 systemd[1]: vizion-scheduling-runner.service: Consumed 25.368s CPU time.
+Feb 15 22:09:34 srv1079950 systemd[1]: Starting vizion-scheduling-runner.service - Vizion Scheduling Runner (tick)...

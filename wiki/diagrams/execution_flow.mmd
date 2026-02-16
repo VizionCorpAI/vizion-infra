@@ -5,3 +5,6 @@ flowchart LR
   TASKS --> ALERTS[alert_event]
   ALERTS --> FANOUT[vizion-alert-reporting]
   FANOUT --> N8N[n8n]
+  MAINT[vizion-maintenance] --> DOCOPS{{DocOps / maintenance audit}}
+  DOCOPS --> INFRA[vizion-infra]
+  DOCOPS --> AUDIT[wiki/audit snapshots]

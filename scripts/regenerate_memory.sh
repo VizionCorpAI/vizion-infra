@@ -45,7 +45,13 @@ tail -n +2 "$REGISTRY" | while IFS=, read -r ws_key agent_key repo_name repo_pat
   # Get dependencies
   DEPS_LIST=""
   if [ -f "$DEPS" ]; then
-    DEPS_LIST=$(grep "^${ws_key}," "$DEPS" 2>/dev/null | cut -d, -f2 | sort -u | tr '\n' ', ' | sed 's/,$//')
+    DEPS_LIST=$(
+      { grep "^${ws_key}," "$DEPS" 2>/dev/null || true; } \
+      | cut -d, -f2 \
+      | sort -u \
+      | tr '\n' ', ' \
+      | sed 's/,$//'
+    )
   fi
 
   cat > "$MEMORY_FILE" << MEMEOF

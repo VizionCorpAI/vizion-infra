@@ -1,0 +1,52 @@
+=== Workspace Structure Validation 2026-02-16T01:01:13Z ===
+
+--- trading (/root/VizionAI/WORKSPACES/vizion-trading) ---
+  scripts: 9 .sh files
+  git: branch=main dirty=4
+  STATUS: OK
+
+--- scheduling (/root/VizionAI/WORKSPACES/vizion-scheduling) ---
+  scripts: 8 .sh files
+  git: branch=main dirty=3
+  STATUS: OK
+
+--- marketing (/root/VizionAI/WORKSPACES/vizion-marketing) ---
+  scripts: 3 .sh files
+  git: branch=main dirty=4
+  STATUS: OK
+
+--- agent_builder (/root/VizionAI/WORKSPACES/vizion-agent-builder) ---
+  OPTIONAL MISSING: agents/main/TOOLS.md
+  scripts: 2 .sh files
+  git: branch=main dirty=2
+  STATUS: OK
+
+--- analytics (/root/VizionAI/WORKSPACES/vizion-analytics) ---
+  OPTIONAL MISSING: agents/main/TOOLS.md
+  scripts: 4 .sh files
+  git: branch=main dirty=3
+  STATUS: OK
+
+--- maintenance (/root/VizionAI/WORKSPACES/vizion-maintenance) ---
+  OPTIONAL MISSING: agents/main/TOOLS.md
+  scripts: 16 .sh files
+  git: branch=main dirty=17
+  STATUS: OK
+
+--- alert_reporting (/root/VizionAI/WORKSPACES/vizion-alert-reporting) ---
+  OPTIONAL MISSING: agents/main/TOOLS.md
+  scripts: 14 .sh files
+  git: branch=main dirty=2
+  STATUS: OK
+
+--- infra (/root/VizionAI/WORKSPACES/vizion-infra) ---
+  scripts: 10 .sh files
+  git: branch=main dirty=37
+  STATUS: OK
+
+--- security (/root/VizionAI/WORKSPACES/vizion-security) ---
+  scripts: 6 .sh files
+  git: branch=main dirty=3
+  STATUS: OK
+
+=== Summary ===

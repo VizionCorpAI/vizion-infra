@@ -1,0 +1,74 @@
+version: 1
+org_id: 570e9d99-d5f5-4a87-95d7-db96b65f9821
+plan: starter
+limits:
+  max_projects: 2
+  max_environments: 3
+  max_identities: 5
+
+identities:
+  - name: VizionAI-infisical_universal_auth
+    alias: provisioner
+    id: 2480b80f-aed7-4fd9-b7ab-4c6b38c5aa0b
+    client_id: bc08fecf-9154-4e6a-9525-80e0e8f6b576
+    role: admin
+    auth_method: universal-auth
+    purpose: Bootstrap, rotation, rare admin ops. Used sparingly.
+
+  - name: VizionAI-runtime-read
+    alias: runtime-read
+    id: b07e4936-122e-4d30-a1fb-2eace7f32ccd
+    client_id: 7e46b7dd-61c5-460c-a2e9-e12b0035226c
+    role: viewer
+    auth_method: universal-auth
+    purpose: Containers pull their own scoped secrets at startup.
+
+  - name: VizionAI-executor
+    alias: executor
+    id: 288f0008-aa75-4ff1-8ca0-10499dfb96da
+    client_id: 089a3de4-1ffb-4eb4-95a5-015a347ee14b
+    role: member
+    auth_method: universal-auth
+    purpose: OpenClaw write actions (git push, migrations, external API).
+
+projects:
+  - name: vizion-infrastructure
+    id: 918f6641-7111-4c80-b08a-46321c6b81ab
+    slug: vizion-infrastructure-fu5-p
+    environments: [dev, staging, prod]
+    folders:
+      - path: /platform
+        secrets: [PLATFORM_DB_HOST, PLATFORM_DB_PORT, PLATFORM_DB_USER, PLATFORM_DB_PASSWORD, PLATFORM_DB_NAME, PLATFORM_DATABASE_URL]
+        consumers: [platform, maintenance, alert-reporting, security, infra]
+      - path: /n8n
+        secrets: [N8N_API_KEY, N8N_ADMIN_EMAIL, N8N_ADMIN_PASSWORD, N8N_PG_CREDENTIAL_ID]
+        consumers: [platform, n8n]
+      - path: /openclaw
+        secrets: [OPENCLAW_HOOK_TOKEN, OPENCLAW_URL, OPENCLAW_N8N_URL, OPENCLAW_NN_URL]
+        consumers: [platform, openclaw]
+      - path: /infisical
+        secrets: [INFISICAL_PROVISIONER_*, INFISICAL_RUNTIME_*, INFISICAL_EXECUTOR_*, INFISICAL_ORG_ID, INFISICAL_PROJECT_*]
+        consumers: [security]
+
+  - name: vizion-business
+    id: f67a6490-4cc1-489d-a6eb-98fe995b0539
+    slug: vizion-business-e-e1t
+    environments: [dev, staging, prod]
+    folders:
+      - path: /facebook
+        secrets: [FB_APP_ID, FB_APP_SECRET, FB_ACCESS_TOKEN, FB_BUSINESS_ID, FB_SYSTEM_USER_ID, FB_AD_ACCOUNT_*, FB_PAGE_*]
+        consumers: [marketing]
+      - path: /trading
+        secrets: [TRADING_METAAPI_TOKEN, TRADING_MT5_ACCOUNT_ID]
+        consumers: [trading]
+      - path: /ai-providers
+        secrets: [AI_OPENAI_API_KEY, AI_ANTHROPIC_API_KEY, AI_GOOGLE_API_KEY]
+        consumers: [agent-builder, platform, analytics]
+      - path: /social
+        secrets: [SOCIAL_LINKEDIN_*, SOCIAL_TIKTOK_*, SOCIAL_NOTION_TOKEN, SOCIAL_WHATSAPP_NUMBER, SOCIAL_TELEGRAM_NUMBER]
+        consumers: [marketing]
+      - path: /n8n-workflows
+        secrets: [N8N_WF_PUBLISHER_ID, N8N_WF_COMMENTS_ID, N8N_WF_ANALYTICS_ID, N8N_WF_LEADS_ID]
+        consumers: [marketing, platform]
+
+naming_convention: "{SCOPE}_{SERVICE}_{KEY}"

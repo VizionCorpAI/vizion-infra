@@ -10,6 +10,7 @@
 - `architecture/05_openclaw_automation.md`
 - `architecture/06_security_model.md`
 - `architecture/07_workspace_model.md`
+- `architecture/08_maintenance_audit.md`
 
 ## Diagrams
 - `diagrams/system.mmd`
