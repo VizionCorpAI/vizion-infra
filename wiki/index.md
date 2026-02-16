@@ -24,6 +24,11 @@
 - `audit/ports_and_services.md`
 - `audit/container_inventory.md`
 
+## Maintenance learning
+- `frequent_problems/README.md`
+- `how_to/README.md`
+- `learning/README.md`
+
 ## Runbooks
 - `runbooks/bootstrap_new_vps.md`
 - `runbooks/bootstrap_new_workspace.md`
