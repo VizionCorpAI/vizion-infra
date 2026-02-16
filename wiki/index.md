@@ -27,7 +27,7 @@
 ## Maintenance learning
 - `frequent_problems/README.md`
 - `how_to/README.md`
-- `learning/README.md`
+- learning plane moved to `/root/VizionAI/WORKSPACES/vizion-infra/learning/`
 
 ## Runbooks
 - `runbooks/bootstrap_new_vps.md`

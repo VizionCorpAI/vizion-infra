@@ -54,23 +54,16 @@
   </div>
 
   <h3>Systemd Timers</h3>
-  <pre>Failed to connect to bus: Operation not permitted</pre>
+  <pre>bash: line 1: rg: command not found</pre>
 
   <h3>Systemd Services</h3>
-  <pre>Failed to connect to bus: Operation not permitted</pre>
+  <pre>bash: line 1: rg: command not found</pre>
 
   <h2>Runtime Services (Docker)</h2>
-  <pre>permission denied while trying to connect to the docker API at unix:///var/run/docker.sock</pre>
+  <pre></pre>
 
   <h2>Listening Ports</h2>
-  <pre>Cannot open netlink socket: Operation not permitted
-4:LISTEN 0      0            0.0.0.0:32768      0.0.0.0:*          
-5:LISTEN 0      0            0.0.0.0:32769      0.0.0.0:*          
-9:LISTEN 0      0            0.0.0.0:48950      0.0.0.0:*          
-10:LISTEN 0      0            0.0.0.0:8000       0.0.0.0:*          
-13:LISTEN 0      0                  *:32768            *:*          
-14:LISTEN 0      0                  *:32769            *:*          
-18:LISTEN 0      0                  *:48950            *:*          </pre>
+  <pre>bash: line 1: rg: command not found</pre>
 
   <h2>Health Checks</h2>
   <div class="box">
@@ -82,30 +75,25 @@
     </ul>
   </div>
   <h3>NN Health JSON</h3>
-  <pre></pre>
+  <pre>{"status":"ok","model_trained":true,"server":"VIZION Neural Network Server v1.0","timestamp":"2026-02-16T04:24:46.621858"}</pre>
   <h3>HTTP HEAD (OpenClaw / n8n / Vaultwarden)</h3>
-  <pre></pre>
+  <pre>HTTP/1.1 200 OK
+Content-Type: text/html
+Cache-Control: no-store, no-cache, must-revalidate, proxy-revalidate
+Pragma: no-cache
+Expires: 0
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Cache-Control: public, max-age=86400
+Last-Modified: Mon, 16 Feb 2026 03:06:34 GMT
+ETag: W/"33ca-19c6469feb2"</pre>
 
   <h2>Workspaces</h2>
   <h3>Workspace Directories</h3>
-  <pre>1:vizion-agent-builder
-2:vizion-alert-reporting
-3:vizion-analytics
-4:vizion-infra
-5:vizion-maintenance
-6:vizion-marketing
-7:vizion-platform
-8:vizion-scheduling
-9:vizion-security
-10:vizion-trading</pre>
+  <pre>bash: line 1: rg: command not found</pre>
 
   <h3>Workspace Git State</h3>
-  <pre>== vizion-agent-builder ==
-remote=git@github.com:VizionCorpAI/vizion-agent-builder.git
-branch=main
-dirty=2
-
-== vizion-alert-reporting ==
+  <pre>== vizion-alert-reporting ==
 remote=git@github.com:VizionCorpAI/vizion-alert-reporting.git
 branch=main
 dirty=2
@@ -118,7 +106,7 @@ dirty=3
 == vizion-infra ==
 remote=git@github.com:VizionCorpAI/vizion-infra.git
 branch=main
-dirty=38
+dirty=27
 
 == vizion-maintenance ==
 remote=git@github.com:VizionCorpAI/vizion-maintenance.git
@@ -129,6 +117,11 @@ dirty=17
 remote=git@github.com:VizionCorpAI/vizion-marketing.git
 branch=main
 dirty=4
+
+== vizion-onboarding ==
+remote=git@github.com:VizionCorpAI/vizion-onboarding.git
+branch=main
+dirty=1
 
 == vizion-platform ==
 remote=git@github.com:VizionCorpAI/vizion-platform.git
@@ -143,7 +136,7 @@ dirty=3
 == vizion-security ==
 remote=git@github.com:VizionCorpAI/vizion-security.git
 branch=main
-dirty=3
+dirty=4
 
 == vizion-trading ==
 remote=git@github.com:VizionCorpAI/vizion-trading.git
@@ -152,7 +145,7 @@ dirty=4</pre>
 
   <h2>Registry Alignment</h2>
   <div class="box warn">
-    <p><b>Potential drift:</b> there is a legacy registry SQL under <code>WORKSPACES/vizion-infra/sql/legacy</code> that still references old paths/remotes (e.g. <code>/root/VizionAI/AGENTS/TRADING/REPO</code> and <code>sahrxvision</code>). The platform registry is authoritative.</p>
+    <p><b>Potential drift:</b> the legacy registry SQL under <code>WORKSPACES/vizion-infra/sql/legacy/001_workspace_repo_registry.sql</code> may still describe historical paths/remotes. Confirm the platform registry (<code>WORKSPACES/vizion-platform/registry</code>) is considered the source of truth before editing.</p>
   </div>
 
   <h3>Platform Registry (workspaces.csv)</h3>
@@ -160,7 +153,7 @@ dirty=4</pre>
 trading,trading,vizion-trading,/root/VizionAI/WORKSPACES/vizion-trading,git@github.com:VizionCorpAI/vizion-trading.git,trading,AIDB,public,trade_,active
 scheduling,scheduling,vizion-scheduling,/root/VizionAI/WORKSPACES/vizion-scheduling,git@github.com:VizionCorpAI/vizion-scheduling.git,scheduling,AIDB,public,sched_,active
 marketing,marketing,vizion-marketing,/root/VizionAI/WORKSPACES/vizion-marketing,git@github.com:VizionCorpAI/vizion-marketing.git,marketing,AIDB,public,mkt_,active
-agent_builder,builder,vizion-agent-builder,/root/VizionAI/WORKSPACES/vizion-agent-builder,git@github.com:VizionCorpAI/vizion-agent-builder.git,agent_builder,AIDB,public,agent_,active
+onboarding,onboarding,vizion-onboarding,/root/VizionAI/WORKSPACES/vizion-onboarding,git@github.com:VizionCorpAI/vizion-onboarding.git,onboarding,AIDB,public,onboard_,active
 analytics,analytics,vizion-analytics,/root/VizionAI/WORKSPACES/vizion-analytics,git@github.com:VizionCorpAI/vizion-analytics.git,analytics,AIDB,public,analytics_,active
 maintenance,maintenance,vizion-maintenance,/root/VizionAI/WORKSPACES/vizion-maintenance,git@github.com:VizionCorpAI/vizion-maintenance.git,maintenance,AIDB,public,maint_,active
 alert_reporting,alert,vizion-alert-reporting,/root/VizionAI/WORKSPACES/vizion-alert-reporting,git@github.com:VizionCorpAI/vizion-alert-reporting.git,alert_reporting,AIDB,public,alert_,active
@@ -172,9 +165,9 @@ security,security,vizion-security,/root/VizionAI/WORKSPACES/vizion-security,git@
 scheduling,trading,read_signals,Uses trading bias/state for schedule gating
 marketing,analytics,read_metrics,Uses analytics KPI rollups for campaign optimization
 analytics,trading,read_trades,Aggregates trading outcomes for reporting
-agent_builder,scheduling,provision_agent,Creates scheduling agents/templates
-agent_builder,marketing,provision_agent,Creates marketing agents/templates
-agent_builder,trading,provision_agent,Creates trading agent modules/templates
+onboarding,scheduling,provision_agent,Creates scheduling agents/templates
+onboarding,marketing,provision_agent,Creates marketing agents/templates
+onboarding,trading,provision_agent,Creates trading agent modules/templates
 analytics,scheduling,read_jobs,Tracks run and SLA metrics
 marketing,trading,read_bias,Aligns outbound content bias with market bias
 trading,analytics,write_metrics,Publishes trade outcomes to analytics warehouse
@@ -230,10 +223,10 @@ INSERT INTO workspace_repo_registry (
   workspace_key, agent_key, repo_name, repo_path, repo_remote, workflow_namespace,
   db_name, db_schema, db_table_prefix, status
 ) VALUES
-  ('trading','trading','profitgtx','/root/VizionAI/AGENTS/TRADING/REPO','git@github.com:sahrxvision/profitgtx.git','trading','AIDB','public','trade_','active'),
+  ('trading','trading','vizion-trading','/root/VizionAI/WORKSPACES/vizion-trading','git@github.com:VizionCorpAI/vizion-trading.git','trading','AIDB','public','trade_','active'),
   ('scheduling','scheduling','vizion-scheduling','/root/VizionAI/WORKSPACES/vizion-scheduling','git@github.com:sahrxvision/vizion-scheduling.git','scheduling','AIDB','public','sched_','active'),
   ('marketing','marketing','vizion-marketing','/root/VizionAI/WORKSPACES/vizion-marketing','git@github.com:sahrxvision/vizion-marketing.git','marketing','AIDB','public','mkt_','active'),
-  ('agent_builder','builder','vizion-agent-builder','/root/VizionAI/WORKSPACES/vizion-agent-builder','git@github.com:sahrxvision/vizion-agent-builder.git','agent_builder','AIDB','public','agent_','active'),
+  ('agent_builder','builder','vizion-onboarding','/root/VizionAI/WORKSPACES/vizion-onboarding','git@github.com:sahrxvision/vizion-onboarding.git','agent_builder','AIDB','public','agent_','active'),
   ('analytics','analytics','vizion-analytics','/root/VizionAI/WORKSPACES/vizion-analytics','git@github.com:sahrxvision/vizion-analytics.git','analytics','AIDB','public','analytics_','active')
 ON CONFLICT (workspace_key) DO UPDATE
 SET agent_key = EXCLUDED.agent_key,
@@ -250,8 +243,8 @@ SET agent_key = EXCLUDED.agent_key,
   <div class="box">
     <p>OpenClaw skill directory on host: <code>/docker/openclaw-xbkt/data/skills</code></p>
   </div>
-  <pre>total 56
-drwxr-xr-x 14 ubuntu ubuntu 4096 Feb 15 19:04 .
+  <pre>total 60
+drwxr-xr-x 15 ubuntu ubuntu 4096 Feb 16 02:11 .
 drwxr-xr-x  9 ubuntu ubuntu 4096 Feb 13 09:35 ..
 drwxr-xr-x 11 ubuntu ubuntu 4096 Feb 13 09:35 metals-desk-os
 drwxr-xr-x  3 ubuntu ubuntu 4096 Feb 15 07:16 vizion-agent-builder
@@ -261,6 +254,7 @@ drwxr-xr-x  3 ubuntu ubuntu 4096 Feb 15 19:47 vizion-infra
 drwxr-xr-x  3 ubuntu ubuntu 4096 Feb 15 07:17 vizion-maintenance
 drwxr-xr-x  3 ubuntu ubuntu 4096 Feb 15 07:17 vizion-marketing
 drwxr-xr-x  3 ubuntu ubuntu 4096 Feb 13 09:36 vizion-nn
+drwxr-xr-x  3 ubuntu ubuntu 4096 Feb 16 02:11 vizion-onboarding
 drwxr-xr-x  3 ubuntu ubuntu 4096 Feb 15 07:17 vizion-platform
 drwxr-xr-x  3 ubuntu ubuntu 4096 Feb 15 07:17 vizion-scheduling
 drwxr-xr-x  3 ubuntu ubuntu 4096 Feb 15 17:15 vizion-security

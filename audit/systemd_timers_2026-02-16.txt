@@ -1,1 +1,21 @@
-Failed to connect to bus: Operation not permitted
+NEXT                            LEFT LAST                              PASSED UNIT                           ACTIVATES
+Mon 2026-02-16 04:30:00 UTC     7min Mon 2026-02-16 04:20:00 UTC 2min 36s ago sysstat-collect.timer          sysstat-collect.service
+Mon 2026-02-16 04:39:03 UTC    16min Mon 2026-02-16 03:55:50 UTC    26min ago fwupd-refresh.timer            fwupd-refresh.service
+Mon 2026-02-16 06:58:24 UTC 2h 35min Sun 2026-02-15 06:19:55 UTC            - apt-daily-upgrade.timer        apt-daily-upgrade.service
+Mon 2026-02-16 10:51:15 UTC       6h Sun 2026-02-15 14:50:33 UTC            - motd-news.timer                motd-news.service
+Mon 2026-02-16 12:12:44 UTC       7h Sun 2026-02-15 09:22:49 UTC            - apt-daily.timer                apt-daily.service
+Tue 2026-02-17 00:00:00 UTC      19h Mon 2026-02-16 00:00:00 UTC            - dpkg-db-backup.timer           dpkg-db-backup.service
+Tue 2026-02-17 00:00:00 UTC      19h Mon 2026-02-16 00:00:00 UTC            - logrotate.timer                logrotate.service
+Tue 2026-02-17 00:07:00 UTC      19h -                                      - sysstat-summary.timer          sysstat-summary.service
+Tue 2026-02-17 00:47:25 UTC      20h Mon 2026-02-16 01:21:34 UTC            - man-db.timer                   man-db.service
+Tue 2026-02-17 03:00:45 UTC      22h Mon 2026-02-16 03:00:44 UTC 1h 21min ago update-notifier-download.timer update-notifier-download.service
+Tue 2026-02-17 03:10:06 UTC      22h Mon 2026-02-16 03:10:06 UTC 1h 12min ago systemd-tmpfiles-clean.timer   systemd-tmpfiles-clean.service
+Thu 2026-02-19 05:29:06 UTC   3 days Tue 2026-02-10 08:59:25 UTC            - update-notifier-motd.timer     update-notifier-motd.service
+Sun 2026-02-22 03:10:01 UTC   5 days Sun 2026-02-15 03:10:23 UTC            - e2scrub_all.timer              e2scrub_all.service
+Mon 2026-02-23 00:06:34 UTC   6 days Mon 2026-02-16 00:49:49 UTC            - fstrim.timer                   fstrim.service
+-                                  - -                                      - apport-autoreport.timer        apport-autoreport.service
+-                                  - -                                      - snapd.snap-repair.timer        snapd.snap-repair.service
+-                                  - -                                      - ua-timer.timer                 ua-timer.service
+-                                  - Mon 2026-02-16 04:21:05 UTC 1min 31s ago vizion-scheduling-runner.timer vizion-scheduling-runner.service
+
+18 timers listed.

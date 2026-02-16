@@ -1,0 +1,37 @@
+# Learning promotion rules: signal -> entry -> action
+# This file is policy-only; platform/infra scripts should implement it.
+
+signal_dedupe:
+  key: fingerprint
+  bump_last_seen: true
+  increment_seen_count: true
+
+promotion:
+  defaults:
+    entry_type: problem
+    status: open
+    severity: medium
+  thresholds:
+    - when:
+        severity_in: [high, critical]
+      promote_after: 1
+    - when:
+        seen_count_gte: 3
+        within_hours: 24
+      promote_after: 3
+    - when:
+        seen_count_gte: 5
+        within_hours: 168
+      promote_after: 5
+
+recommendations:
+  action_ready_if:
+    entry_type: recommendation
+    status_in: [open, in_progress]
+    severity_in: [high, critical]
+
+summaries:
+  refresh_intervals:
+    system_hours: 24
+    workspace_hours: 12
+    agent_hours: 24

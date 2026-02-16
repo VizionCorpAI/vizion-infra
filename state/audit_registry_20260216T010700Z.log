@@ -1,7 +1,7 @@
 === Registry Consistency Audit 2026-02-16T01:07:00Z ===
 
 --- Filesystem Workspaces ---
-  vizion-agent-builder
+  vizion-onboarding
   vizion-alert-reporting
   vizion-analytics
   vizion-infra
@@ -17,7 +17,7 @@
   trading -> vizion-trading (/root/VizionAI/WORKSPACES/vizion-trading)
   scheduling -> vizion-scheduling (/root/VizionAI/WORKSPACES/vizion-scheduling)
   marketing -> vizion-marketing (/root/VizionAI/WORKSPACES/vizion-marketing)
-  agent_builder -> vizion-agent-builder (/root/VizionAI/WORKSPACES/vizion-agent-builder)
+  agent_builder -> vizion-onboarding (/root/VizionAI/WORKSPACES/vizion-onboarding)
   analytics -> vizion-analytics (/root/VizionAI/WORKSPACES/vizion-analytics)
   maintenance -> vizion-maintenance (/root/VizionAI/WORKSPACES/vizion-maintenance)
   alert_reporting -> vizion-alert-reporting (/root/VizionAI/WORKSPACES/vizion-alert-reporting)
@@ -30,7 +30,7 @@
 
 --- OpenClaw Skills ---
   metals-desk-os
-  vizion-agent-builder
+  vizion-onboarding
   vizion-alert-reporting
   vizion-analytics
   vizion-infra

@@ -31,10 +31,10 @@ INSERT INTO workspace_repo_registry (
   workspace_key, agent_key, repo_name, repo_path, repo_remote, workflow_namespace,
   db_name, db_schema, db_table_prefix, status
 ) VALUES
-  ('trading','trading','profitgtx','/root/VizionAI/AGENTS/TRADING/REPO','git@github.com:sahrxvision/profitgtx.git','trading','AIDB','public','trade_','active'),
+  ('trading','trading','vizion-trading','/root/VizionAI/WORKSPACES/vizion-trading','git@github.com:VizionCorpAI/vizion-trading.git','trading','AIDB','public','trade_','active'),
   ('scheduling','scheduling','vizion-scheduling','/root/VizionAI/WORKSPACES/vizion-scheduling','git@github.com:sahrxvision/vizion-scheduling.git','scheduling','AIDB','public','sched_','active'),
   ('marketing','marketing','vizion-marketing','/root/VizionAI/WORKSPACES/vizion-marketing','git@github.com:sahrxvision/vizion-marketing.git','marketing','AIDB','public','mkt_','active'),
-  ('agent_builder','builder','vizion-agent-builder','/root/VizionAI/WORKSPACES/vizion-agent-builder','git@github.com:sahrxvision/vizion-agent-builder.git','agent_builder','AIDB','public','agent_','active'),
+  ('agent_builder','builder','vizion-onboarding','/root/VizionAI/WORKSPACES/vizion-onboarding','git@github.com:sahrxvision/vizion-onboarding.git','agent_builder','AIDB','public','agent_','active'),
   ('analytics','analytics','vizion-analytics','/root/VizionAI/WORKSPACES/vizion-analytics','git@github.com:sahrxvision/vizion-analytics.git','analytics','AIDB','public','analytics_','active')
 ON CONFLICT (workspace_key) DO UPDATE
 SET agent_key = EXCLUDED.agent_key,

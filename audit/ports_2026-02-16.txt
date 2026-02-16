@@ -1,17 +1,18 @@
-Cannot open netlink socket: Operation not permitted
-State  Recv-Q Send-Q Local Address:Port  Peer Address:PortProcess
-LISTEN 0      0          127.0.0.1:42471      0.0.0.0:*          
-LISTEN 0      0            0.0.0.0:22         0.0.0.0:*          
-LISTEN 0      0            0.0.0.0:32768      0.0.0.0:*          
-LISTEN 0      0            0.0.0.0:32769      0.0.0.0:*          
-LISTEN 0      0         127.0.0.54:53         0.0.0.0:*          
-LISTEN 0      0          127.0.0.1:631        0.0.0.0:*          
-LISTEN 0      0          127.0.0.1:22790      0.0.0.0:*          
-LISTEN 0      0            0.0.0.0:8000       0.0.0.0:*          
-LISTEN 0      0         127.0.0.53:53         0.0.0.0:*          
-LISTEN 0      0                  *:22               *:*          
-LISTEN 0      0                  *:32768            *:*          
-LISTEN 0      0                  *:32769            *:*          
-LISTEN 0      0              [::1]:631              *:*          
-LISTEN 0      0                  *:3389             *:*          
-LISTEN 0      0              [::1]:3350             *:*          
+State  Recv-Q Send-Q Local Address:Port  Peer Address:PortProcess                                                 
+LISTEN 0      1024       127.0.0.1:33255      0.0.0.0:*    users:(("code-b6a47e94e3",pid=22405,fd=11))            
+LISTEN 0      4096       127.0.0.1:631        0.0.0.0:*    users:(("cupsd",pid=1002,fd=7))                        
+LISTEN 0      2048         0.0.0.0:8000       0.0.0.0:*    users:(("python",pid=1006,fd=6))                       
+LISTEN 0      4096         0.0.0.0:48950      0.0.0.0:*    users:(("docker-proxy",pid=2166,fd=8))                 
+LISTEN 0      4096         0.0.0.0:22         0.0.0.0:*    users:(("sshd",pid=2488,fd=3),("systemd",pid=1,fd=246))
+LISTEN 0      4096         0.0.0.0:32768      0.0.0.0:*    users:(("docker-proxy",pid=2187,fd=8))                 
+LISTEN 0      4096         0.0.0.0:32769      0.0.0.0:*    users:(("docker-proxy",pid=2221,fd=8))                 
+LISTEN 0      4096   127.0.0.53%lo:53         0.0.0.0:*    users:(("systemd-resolve",pid=543,fd=15))              
+LISTEN 0      4096      127.0.0.54:53         0.0.0.0:*    users:(("systemd-resolve",pid=543,fd=17))              
+LISTEN 0      511        127.0.0.1:56044      0.0.0.0:*    users:(("node",pid=22501,fd=27))                       
+LISTEN 0      2              [::1]:3350          [::]:*    users:(("xrdp-sesman",pid=1021,fd=11))                 
+LISTEN 0      2                  *:3389             *:*    users:(("xrdp",pid=1043,fd=11))                        
+LISTEN 0      4096            [::]:48950         [::]:*    users:(("docker-proxy",pid=2171,fd=8))                 
+LISTEN 0      4096            [::]:22            [::]:*    users:(("sshd",pid=2488,fd=4),("systemd",pid=1,fd=247))
+LISTEN 0      4096            [::]:32768         [::]:*    users:(("docker-proxy",pid=2197,fd=8))                 
+LISTEN 0      4096            [::]:32769         [::]:*    users:(("docker-proxy",pid=2227,fd=8))                 
+LISTEN 0      4096           [::1]:631           [::]:*    users:(("cupsd",pid=1002,fd=6))                        

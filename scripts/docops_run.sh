@@ -29,8 +29,13 @@ echo "--- Step 3: Audit Registry Consistency ---"
 echo "--- Step 4: Regenerate MEMORY.md ---"
 ./scripts/regenerate_memory.sh 2>&1 || echo "WARNING: regenerate_memory.sh failed"
 
-# Step 5: Sync wiki to GitHub
-echo "--- Step 5: Sync Wiki to GitHub ---"
+# Step 5: Promote learning signals and refresh summaries
+echo "--- Step 5: Learning Promotion + Summaries ---"
+./scripts/learning_promote.sh 2>&1 || echo "WARNING: learning_promote.sh failed"
+./scripts/learning_refresh_all_summaries.sh 2>&1 || echo "WARNING: learning_refresh_all_summaries.sh failed"
+
+# Step 6: Sync wiki to GitHub
+echo "--- Step 6: Sync Wiki to GitHub ---"
 ./scripts/wiki_sync.sh 2>&1 || echo "WARNING: wiki_sync.sh failed"
 
 # Record completion

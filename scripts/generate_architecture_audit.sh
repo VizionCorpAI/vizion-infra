@@ -50,8 +50,8 @@ ws_git="$(
   done
 )"
 
-registry_csv="$(cmd_or_true "cd \"$PLATFORM\" && sed -n '1,200p' registry/workspaces.csv 2>/dev/null || true")"
-deps_csv="$(cmd_or_true "cd \"$PLATFORM\" && sed -n '1,250p' registry/workspace_dependencies.csv 2>/dev/null || true")"
+registry_csv="$(cmd_or_true "sed -n '1,200p' \"$PLATFORM/registry/workspaces.csv\" 2>/dev/null || true")"
+deps_csv="$(cmd_or_true "sed -n '1,250p' \"$PLATFORM/registry/workspace_dependencies.csv\" 2>/dev/null || true")"
 legacy_registry_sql="$(cmd_or_true "sed -n '1,260p' \"$INFRA/sql/legacy/001_workspace_repo_registry.sql\" 2>/dev/null || true")"
 
 nn_health="$(cmd_or_true "curl -s --max-time 5 http://127.0.0.1:8000/health || true")"
@@ -157,7 +157,7 @@ cat >"$html" <<HTML
 
   <h2>Registry Alignment</h2>
   <div class="box warn">
-    <p><b>Potential drift:</b> there is a legacy registry SQL under <code>WORKSPACES/vizion-infra/sql/legacy</code> that still references old paths/remotes (e.g. <code>/root/VizionAI/AGENTS/TRADING/REPO</code> and <code>sahrxvision</code>). The platform registry is authoritative.</p>
+    <p><b>Potential drift:</b> the legacy registry SQL under <code>WORKSPACES/vizion-infra/sql/legacy/001_workspace_repo_registry.sql</code> may still describe historical paths/remotes. Confirm the platform registry (<code>WORKSPACES/vizion-platform/registry</code>) is considered the source of truth before editing.</p>
   </div>
 
   <h3>Platform Registry (workspaces.csv)</h3>

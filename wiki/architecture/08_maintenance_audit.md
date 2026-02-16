@@ -18,4 +18,8 @@ This is the maintenance audit system: a DocOps-driven feedback loop that capture
 3. Regenerating `MEMORY.md` keeps workspace memory files truthful, so the agent catalogs always expose accurate roles, dependencies, and key constants.
 4. Wiki sync copies the flat markdown into `state/wiki-clone` for GitHub, so a single command can fetch the latest architecture doc plus audit snapshot.
 
+## Learning module
+- The maintenance audit workflow feeds a lightweight learning module under `state/learning.log` (not yet created) that looks for repeated fixes (DNS outages, failed git pushes, container restarts) and writes short snippets into `frequent_problems/` plus corresponding How To entries.
+- Platform remains the executor: `vizion-platform` runs the audits and writes to `state/`, while maintenance/security/analytics workspaces subscribe to the `frequent_problems` notes, letting operators say “OpenClaw onboard new client Kenzy” without learning-based drift. The learning module also updates `wiki/how_to/` for whoever handles the next run.
+
 By packaging these pieces, the maintenance audit system minimizes manual list-building and makes every deployment traceable.

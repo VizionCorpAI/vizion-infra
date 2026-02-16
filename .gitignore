@@ -1,0 +1,7 @@
+state/
+audit/
+state/wiki-clone/
+*.log
+*.tmp
+*.swp
+.DS_Store

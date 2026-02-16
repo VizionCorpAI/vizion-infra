@@ -15,7 +15,7 @@
   git: branch=main dirty=4
   STATUS: OK
 
---- agent_builder (/root/VizionAI/WORKSPACES/vizion-agent-builder) ---
+--- agent_builder (/root/VizionAI/WORKSPACES/vizion-onboarding) ---
   OPTIONAL MISSING: agents/main/TOOLS.md
   scripts: 2 .sh files
   git: branch=main dirty=2

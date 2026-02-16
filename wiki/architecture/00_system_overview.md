@@ -8,7 +8,7 @@ VizionAI is a multi-workspace system with a central control plane and distribute
 - Telemetry and alerts: `vizion-alert-reporting`
 - Analytics: `vizion-analytics`
 - Maintenance: `vizion-maintenance`
-- Domain workspaces: `vizion-trading`, `vizion-marketing`, `vizion-agent-builder`
+- Domain workspaces: `vizion-trading`, `vizion-marketing`, `vizion-onboarding`
 
 ## Diagram
 ```mermaid

@@ -1,1 +1,4 @@
-permission denied while trying to connect to the docker API at unix:///var/run/docker.sock
+NAMES                          IMAGE                                    PORTS
+openclaw-xbkt-openclaw-1       ghcr.io/hostinger/hvps-openclaw:latest   0.0.0.0:48950->48950/tcp, [::]:48950->48950/tcp
+n8n-hxq9-n8n-1                 docker.n8n.io/n8nio/n8n                  0.0.0.0:32769->5678/tcp, [::]:32769->5678/tcp
+postgresql-pv9y-postgresql-1   postgres:17                              0.0.0.0:32768->5432/tcp, [::]:32768->5432/tcp
