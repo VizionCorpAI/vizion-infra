@@ -1,0 +1,168 @@
+{
+  "name": "Network Diagnostics",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "chat/network-diagnostics",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "Chat Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ],
+      "webhookId": ""
+    },
+    {
+      "parameters": {
+        "agent": "conversationalAgent",
+        "promptType": "define",
+        "text": "={ $json.message }",
+        "options": {
+          "systemMessage": "You are a network diagnostics specialist. Diagnose network issues. Use the available tools to complete tasks efficiently."
+        }
+      },
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        450,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "name": "ping_host",
+        "description": "Tool: Ping Host",
+        "workflowId": "={{ $workflow.id }}",
+        "fields": {
+          "values": []
+        },
+        "options": {}
+      },
+      "name": "Tool: ping_host",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.1,
+      "position": [
+        250,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "name": "trace_route",
+        "description": "Tool: Trace Route",
+        "workflowId": "={{ $workflow.id }}",
+        "fields": {
+          "values": []
+        },
+        "options": {}
+      },
+      "name": "Tool: trace_route",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "name": "check_dns",
+        "description": "Tool: Check Dns",
+        "workflowId": "={{ $workflow.id }}",
+        "fields": {
+          "values": []
+        },
+        "options": {}
+      },
+      "name": "Tool: check_dns",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.1,
+      "position": [
+        550,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "name": "check_ports",
+        "description": "Tool: Check Ports",
+        "workflowId": "={{ $workflow.id }}",
+        "fields": {
+          "values": []
+        },
+        "options": {}
+      },
+      "name": "Tool: check_ports",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        500
+      ]
+    }
+  ],
+  "connections": {
+    "Chat Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "ai_tool": [
+        [
+          {
+            "node": "Tool: ping_host",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Tool: trace_route",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Tool: check_dns",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Tool: check_ports",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "AI Agent"
+    },
+    {
+      "name": "VizionAI"
+    }
+  ],
+  "triggerCount": 1,
+  "versionId": ""
+}
