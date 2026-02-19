@@ -2,37 +2,104 @@
   "name": "Deployment Helper",
   "nodes": [
     {
+      "id": "94979bf7-76d7-47c2-8e5f-a75a0da51ae3",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        260,
+        300
+      ],
       "parameters": {
         "httpMethod": "POST",
         "path": "chat/deployment-helper",
         "responseMode": "responseNode",
         "options": {}
-      },
-      "name": "Webhook",
-      "type": "n8n-nodes-base.webhook",
-      "typeVersion": 2,
-      "position": [
-        250,
-        300
-      ]
+      }
     },
     {
+      "id": "14e9042f-ed8f-4478-84c7-38f4ae459b68",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        560,
+        300
+      ],
       "parameters": {
-        "respondWith": "json",
-        "responseBody": "={{ JSON.stringify($json) }}",
-        "options": {}
+        "agent": "conversationalAgent",
+        "promptType": "define",
+        "text": "={{ $json.body?.message || $json.message || $json.body?.text || 'Hello' }}",
+        "options": {
+          "systemMessage": "You are a deployment assistance AI. Guide and validate deployment processes, check configurations, identify potential issues, and provide step-by-step deployment guidance."
+        }
+      }
+    },
+    {
+      "id": "e3d43721-de85-4a9d-a5fe-21b7944f2b59",
+      "name": "OpenRouter Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        560,
+        540
+      ],
+      "parameters": {
+        "model": "meta-llama/llama-3.3-70b-instruct:free",
+        "options": {
+          "maxTokens": 1500,
+          "temperature": 0.3
+        }
       },
+      "credentials": {
+        "openRouterApi": {
+          "id": "9a8L86PX0yHKHdfY",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "id": "c1d6fbab-c25d-458f-9ff2-e4a662ddf62a",
       "name": "Respond to Webhook",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
       "position": [
-        450,
+        860,
         300
-      ]
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ response: $json.output || $json.text || $json, model: \"meta-llama/llama-3.3-70b-instruct:free\", tier: 1, workspace: \"infra\", agent: \"deployment_helper\" }) }}",
+        "options": {
+          "responseCode": 200
+        }
+      }
     }
   ],
   "connections": {
     "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
       "main": [
         [
           {
@@ -45,6 +112,10 @@
     }
   },
   "settings": {
-    "executionOrder": "v1"
-  }
+    "executionOrder": "v1",
+    "saveManualExecutions": false,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "staticData": null,
+  "tags": []
 }
