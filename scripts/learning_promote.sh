@@ -64,3 +64,41 @@ SQL
   <<< "$sql"
 
 echo "learning_promote: promotion run complete"
+
+# ── Airtable Library: sync promoted entries to Signals (mark as promoted) ─────
+_airtable_token="${AIRTABLE_LIBRARY_TOKEN:-AIRTABLE_TOKEN_PLACEHOLDER}"
+_airtable_base="${AIRTABLE_LIBRARY_BASE_ID:-appVnA7GVfUVfvBM0}"
+if command -v curl >/dev/null 2>&1 && [ -n "$_airtable_token" ]; then
+  # Fetch unprocessed signals from Airtable, promote them to 'promoted' status
+  _unprocessed=$(curl -s \
+    -H "Authorization: Bearer $_airtable_token" \
+    "https://api.airtable.com/v0/$_airtable_base/Signals?filterByFormula=status='unprocessed'&pageSize=50" 2>/dev/null)
+
+  _count=$(echo "$_unprocessed" | python3 -c "
+import sys, json
+d = json.load(sys.stdin)
+recs = d.get('records', [])
+print(len(recs))
+" 2>/dev/null || echo "0")
+
+  if [ "$_count" -gt 0 ] 2>/dev/null; then
+    # Build bulk patch payload for all unprocessed signals → status=in-review
+    _patch_body=$(echo "$_unprocessed" | python3 -c "
+import sys, json
+d = json.load(sys.stdin)
+records = [{'id': r['id'], 'fields': {'status': 'in-review'}} for r in d.get('records', [])]
+print(json.dumps({'records': records[:10]}))  # Airtable max 10 per batch
+" 2>/dev/null)
+    if [ -n "$_patch_body" ]; then
+      curl -s -X PATCH \
+        -H "Authorization: Bearer $_airtable_token" \
+        -H "Content-Type: application/json" \
+        -d "$_patch_body" \
+        "https://api.airtable.com/v0/$_airtable_base/Signals" >/dev/null 2>&1 && \
+        echo "airtable: $_count unprocessed signals moved to in-review" || \
+        echo "airtable: signals update failed (non-fatal)"
+    fi
+  else
+    echo "airtable: no unprocessed signals to promote"
+  fi
+fi

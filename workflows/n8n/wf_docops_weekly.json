@@ -30,5 +30,6 @@
     "Weekly Sunday 02:00": {"main": [[{"node": "Run DocOps", "type": "main", "index": 0}]]},
     "Run DocOps": {"main": [[{"node": "Check Result", "type": "main", "index": 0}]]}
   },
+  "active": false,
   "settings": {"executionOrder": "v1"}
 }

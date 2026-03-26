@@ -11,6 +11,7 @@ identities:
     alias: provisioner
     id: 2480b80f-aed7-4fd9-b7ab-4c6b38c5aa0b
     client_id: bc08fecf-9154-4e6a-9525-80e0e8f6b576
+    client_secret: 2925908db2be94f2a14fbd6cd068f08babb23a211d719ddebdc7cdbf13df95a7
     role: admin
     auth_method: universal-auth
     purpose: Bootstrap, rotation, rare admin ops. Used sparingly.

@@ -1,0 +1,673 @@
+title,category,workspace,tags,status,content,summary,source,verified,created_by,created_at,updated_at
+System Overview — VizionAI Architecture,architecture,vizion-infra,"architecture,overview,platform,orchestration",active,"# System Overview
+
+VizionAI is a multi-workspace system with a central control plane and distributed workspaces. The platform is the authoritative registry and coordinator. Scheduling is centralized. Alerting is centralized via the alert-reporting workspace.
+
+## Core Components
+- Platform control plane: `vizion-platform`
+- Central scheduler: `vizion-scheduling`
+- Telemetry and alerts: `vizion-alert-reporting`
+- Analytics: `vizion-analytics`
+- Maintenance: `vizion-maintenance`
+- Domain workspaces: `vizion-trading`, `vizion-marketing`, `vizion-onboarding`
+
+## Diagram
+```mermaid
+flowchart LR
+  subgraph VPS[Hostinger VPS]
+    SCHED[Central Scheduler\n(vizion-scheduling-runner.timer)] --> DB[(Postgres AIDB)]
+    SCHED --> JOBS[sched_job / sched_job_run]
+    SCHED --> PLATFORM[vizion-platform\n(plan_from_alerts + dispatch_tasks)]
+    PLATFORM --> TASKS[platform_task]
+    PLATFORM --> ALERTS[alert_event]
+    ALERTS --> FANOUT[vizion-alert-reporting\nfanout_run]
+    FANOUT --> N8N[n8n]
+    FANOUT --> OC[OpenClaw]
+    TRD[vizion-trading] --> ALERTS
+    MKT[vizion-marketing] --> ALERTS
+    MAINT[vizion-maintenance] --> ALERTS
+    ANA[vizion-analytics] --> ALERTS
+    NN[vizion-nn.service\n:8000] --> TRD
+    VW[Vaultwarden\n:32768] --- UI[(RDP/Xorg Browser)]
+  end
+```","VizionAI is a multi-workspace platform with a central control plane (vizion-platform), central scheduler (vizion-scheduling), telemetry via vizion-alert-reporting, and domain workspaces for trading, marketing, and onboarding. All workspaces register to the platform and receive dispatched tasks.",migration,TRUE,operator,2026-02-16,2026-03-11
+"Runtime Topology — Containers, Ports, and Services",architecture,vizion-infra,"architecture,docker,ports,topology,runtime",active,"# Runtime Topology
+
+## Containers
+- OpenClaw: `0.0.0.0:48950`
+- n8n: `0.0.0.0:32769`
+- Postgres: `0.0.0.0:32770`
+- Vaultwarden: `0.0.0.0:32768`
+
+## Services
+- NN server: `vizion-nn.service` on `:8000`
+- Scheduler: `vizion-scheduling-runner.timer`
+
+## Health Endpoints
+- NN: `http://127.0.0.1:8000/health`
+- OpenClaw: `http://127.0.0.1:48950/`
+- n8n: `http://127.0.0.1:32769/`
+- Vaultwarden: `http://127.0.0.1:32768/`","Documents all container host-port mappings (OpenClaw 48950, n8n 32769, PostgreSQL 32770), systemd services (NN server on 8000, vizion-scheduling-runner.timer), and health check endpoints for the VPS runtime.",migration,TRUE,operator,2026-02-16,2026-03-11
+Execution Flow — Orchestration and Task Dispatch,architecture,vizion-infra,"architecture,orchestration,scheduler,platform-task,execution-flow",active,"# Orchestration
+
+## Central Scheduler (single orchestrator)
+- Systemd timer: `vizion-scheduling-runner.timer`
+- Jobs: `sched_job` and `sched_job_run`
+
+## Flow
+1. Alert reporting collects snapshots
+2. Scheduler runs `platform.plan_dispatch`
+3. Platform emits `platform_task` → `alert_event`
+4. Scheduler consumes platform tasks and triggers workspace actions
+5. Maintenance consumes tasks and runs allowlisted actions",Describes the end-to-end task execution flow: alert-reporting collects snapshots → scheduler runs platform.plan_dispatch → platform emits platform_task → scheduler triggers workspace actions → maintenance executes allowlisted operations.,migration,TRUE,operator,2026-02-16,2026-03-11
+Registry and Dispatch — Source of Truth,architecture,vizion-infra,"architecture,registry,dispatch,workspace,database",active,"# Registry and Dependencies
+
+## Source of Truth
+- `vizion-platform/registry/workspaces.csv`
+- `vizion-platform/registry/workspace_dependencies.csv`
+
+## DB Tables
+- `workspace_repo_registry`
+- `workspace_dependency_registry`
+
+## Runtime Registry (discovered)
+- `workspace_agent_registry`
+- `workspace_n8n_workflow_registry`","The platform CSV files (workspaces.csv, workspace_dependencies.csv) are the source of truth for workspace registration. Runtime state is stored in workspace_agent_registry and workspace_n8n_workflow_registry DB tables.",migration,TRUE,operator,2026-02-16,2026-03-11
+Secrets and Identity — Infisical Model,architecture,vizion-infra,"architecture,secrets,infisical,identity,security",active,"# Secrets and Identity
+
+## Principles
+- No secrets in repos
+- Use environment + secrets manager
+- Rotate any secret pasted into chat
+
+## Identity
+- Systemd services and containers use scoped secrets
+- Workspace-specific credentials are scoped to that workspace","No secrets stored in repos. Systemd services and containers use scoped secrets injected via environment. Three Infisical identities: provisioner (admin, rare ops), runtime-read (containers pull own secrets), executor (OpenClaw write actions).",migration,TRUE,operator,2026-02-16,2026-03-11
+DocOps and Memory — Audit Cycle and Wiki Sync,architecture,vizion-infra,"architecture,docops,memory,wiki,audit,automation",active,"# 05_docops_and_memory
+
+This workspace owns the DocOps cycle—capture state, audit registries, regenerate durable memory, and publish the wiki/audit artifacts.
+
+## DocOps cycle
+- Entry point: `scripts/docops_run.sh`.
+- Steps: `capture_system_state.sh` → `validate_workspace_structure.sh` → `audit_registry_consistency.sh` → `regenerate_memory.sh` → `wiki_sync.sh`.
+- Each run appends a timestamped line to `state/docops_runs.log` and writes structured CSV/log reports under `state/`.
+- Audit snapshots land in `wiki/audit/` (HTML, Markdown, logs) so stakeholders can inspect orchestration and runtime health.
+
+## Memory regeneration
+- `scripts/regenerate_memory.sh` re-creates every workspace `agents/main/MEMORY.md` from the authoritative registry CSV (`vizion-platform/registry/workspaces.csv`).
+- The output highlights workspace roles, dependencies, and key constants (DB prefix, orchestrator, secrets vault).
+- Regeneration runs inside DocOps and can be triggered independently when the registry or workspace topology changes.","The DocOps cycle captures system state, validates workspace structure, audits registry consistency, regenerates MEMORY.md for all workspaces, and syncs to GitHub wiki. Entry point: scripts/docops_run.sh. Runs weekly via wf_docops_weekly n8n workflow.",migration,TRUE,operator,2026-02-16,2026-03-11
+OpenClaw Automation — Safety Boundaries and Dispatch,architecture,vizion-infra,"architecture,openclaw,automation,skills,dispatch",active,"# OpenClaw Automation
+
+## Safety Boundaries
+- Only allowlisted tasks are executed
+- Workspace skills are generated from `WORKSPACES/*/agents/**/AGENT.md`
+- OpenClaw skill sync targets `/docker/openclaw-xbkt/data/skills`
+
+## Dispatch Model
+- Platform emits `platform_task`
+- Scheduler triggers workspace workflows or OpenClaw skills","OpenClaw only executes allowlisted tasks via skills generated from workspace AGENT.md files. Skills are synced to /docker/openclaw-xbkt/data/skills. Platform emits platform_task, scheduler triggers workspace workflows or OpenClaw skills.",migration,TRUE,operator,2026-02-16,2026-03-11
+Security Model — Observability and Alerting,architecture,vizion-infra,"architecture,security,alerting,observability,fanout",active,"# Observability and Alerting
+
+## Alerting
+- Centralized via `vizion-alert-reporting`
+- All workspaces emit `alert_event`
+
+## Fanout
+- n8n webhook fanout
+- OpenClaw fanout (advisory)",All workspaces emit alert_event to vizion-alert-reporting. Fanout is handled via n8n webhook fanout and OpenClaw advisory mode. Alerting is centralized; no workspace handles its own alerting independently.,migration,TRUE,operator,2026-02-16,2026-03-11
+Maintenance Audit — DocOps Feedback Loop,architecture,vizion-infra,"architecture,maintenance,audit,docops,state",active,"# 08_maintenance_audit
+
+This is the maintenance audit system: a DocOps-driven feedback loop that captures the live stack, validates every workspace, and publishes the results in the `wiki/audit/` archive.
+
+## Goal
+- Provide a single, trusted snapshot of orchestration state, Docker containers, ports, services, memory size, packages, and raft of workspace metadata.
+- Keep the canonical wiki in sync with what is actually running on the host, so maintenance can rapidly triage drift.
+
+## Key components
+- `scripts/capture_system_state.sh`: gathers host metadata, services, timers, docker status, logs, and package inventory, then invokes `scripts/generate_architecture_audit.sh` to render the HTML audit plus supporting markdown.
+- `scripts/docops_run.sh`: orchestrates the capture step, validates workspace structure, audits registry consistency, regenerates `MEMORY.md`, and runs `scripts/wiki_sync.sh` to push the markdown into the GitHub wiki.
+- `state/`: stores audit reports (`state/validate_structure_*.log`, `state/audit_registry_*.log`), `docops_runs.log`, and the `client_channels.json` ledger used by OpenClaw onboarding helpers.
+- `wiki/audit/`: houses timestamped HTML/Markdown snapshots and container/port inventories that DocOps regenerates every run.
+
+## Automation flow
+1. Maintenance triggers `docops_run.sh` manually or via the `vizion-infra` `wf_docops_weekly` workflow. The capture step writes `wiki/audit/<date>_audit.html` and small supporting markdown for quick reading.
+2. The validation step checks each workspace’s scripts folder and git cleanliness, while the registry audit cross-references the filesystem, platform CSV, and OpenClaw skills.
+3. Regenerating `MEMORY.md` keeps workspace memory files truthful, so the agent catalogs always expose accurate roles, dependencies, and key constants.
+4. Wiki sync copies the flat markdown into `state/wiki-clone` for GitHub, so a single command can fetch the latest architecture doc plus audit snapshot.
+
+## Learning module
+- The maintenance audit workflow feeds a lightweight learning module under `state/learning.log` (not yet created) that looks for repeated fixes (DNS outages, failed git pushes, container restarts) and writes short snippets into `frequent_problems/` plus corresponding How To entries.
+- Platform remains the executor: `vizion-platform` runs the audits and writes to `state/`, while maintenance/security/analytics workspaces subscribe to the `frequent_problems` notes, letting operators say “OpenClaw onboard new client Kenzy” without learning-based drift. The learning module also updates `wiki/how_to/` for whoever handles the next run.
+
+By packaging these pieces, the maintenance audit system minimizes manual list-building and makes every deployment traceable.","The maintenance audit system captures a live stack snapshot (Docker containers, ports, systemd services, package inventory), validates all workspaces, and publishes HTML+Markdown audit artifacts to wiki/audit/. Key scripts: capture_system_state.sh, generate_architecture_audit.sh, docops_run.sh.",migration,TRUE,operator,2026-02-16,2026-03-11
+N8N Agent Capability Registry — All 39 Active Agents,reference,vizion-infra,"n8n,agents,webhook,langchain,registry,capability",active,"---
+summary: ""VizionAI n8n Agent Capability Registry — semantic lookup for all 39 active agents""
+updated: ""2026-03-03""
+---
+
+# N8N Agent Capability Registry
+
+Complete semantic reference for all active n8n AI agents. Use this file to match any user
+request to the correct agent and call it directly via webhook.
+
+**Base URL (from OpenClaw container):** `http://172.19.0.1:32769`
+**Webhook pattern:** `POST {base}/webhook/{ID}/webhook/{PATH}`
+**Standard payload:** `{""chatInput"": ""<instruction>"", ""sessionId"": ""openclaw-main""}`
+**Standard response:** `{""response"": ""..."", ""model"": ""..."", ""tier"": 0, ""workspace"": ""..."", ""agent"": ""...""}`
+
+---
+
+## MAINTENANCE
+
+### Cleanup Optimizer
+**Does:** Frees disk space — removes stale Docker image layers, old log files, temp files, orphaned volumes, cache
+**Call when:** storage full, disk space low, free space, cleanup, optimize storage, prune docker, remove old files, disk usage high, running out of space
+**URL:** `POST http://172.19.0.1:32769/webhook/QuhckXw5IqnbRfLg/webhook/chat/cleanup-optimizer`
+
+### Auto Repair
+**Does:** Detects and fixes common runtime issues — restarts failed containers, repairs broken services, resolves configuration drift
+**Call when:** something is broken, container crashed, service down, auto-fix, repair, restore service, fix issue
+**URL:** `POST http://172.19.0.1:32769/webhook/hfwj3tEnsyv037JH/webhook/chat/auto-repair`
+
+### Backup Manager
+**Does:** Runs backups of data, configs, and workspace files; manages backup schedules and retention
+**Call when:** backup, save state, archive, snapshot data, create backup, backup database, preserve data
+**URL:** `POST http://172.19.0.1:32769/webhook/aJQfil251QPIT1cp/webhook/chat/backup-manager`
+
+### Health Checker
+**Does:** Comprehensive health check of all services — n8n, MT5, NN server, PostgreSQL, containers; returns detailed status report
+**Call when:** health check, system status, everything ok, check all services, are things running, system health, full status check
+**URL:** `POST http://172.19.0.1:32769/webhook/xlDt5ByTULvB1edF/webhook/chat/health-checker`
+
+### Resource Monitor
+**Does:** Monitors CPU, memory, disk, and network usage across containers; alerts on threshold breaches
+**Call when:** resource usage, CPU high, memory usage, disk stats, container resources, system load, performance check
+**URL:** `POST http://172.19.0.1:32769/webhook/4SmbwXrZjUykhNri/webhook/chat/resource-monitor`
+
+---
+
+## INFRASTRUCTURE
+
+### Container Manager
+**Does:** Manages Docker containers — restart, stop, start, inspect logs, update images, scale services
+**Call when:** restart container, stop container, docker, container logs, update image, scale, manage containers
+**URL:** `POST http://172.19.0.1:32769/webhook/bg0kMJFELtShSAU4/webhook/chat/container-manager`
+
+### Deployment Helper
+**Does:** Assists with deployments — rolling updates, version pinning, rollback, deployment status
+**Call when:** deploy, deployment, update service, rollback, release, push update, version update
+**URL:** `POST http://172.19.0.1:32769/webhook/4KyLCtdE5f1sk2NF/webhook/chat/deployment-helper`
+
+### Network Diagnostics
+**Does:** Diagnoses network issues — connectivity checks, DNS lookups, port probes, latency tests, route tracing
+**Call when:** network issue, can't connect, connectivity problem, ping, port check, DNS issue, firewall, network test
+**URL:** `POST http://172.19.0.1:32769/webhook/lj5OAvcuC97D0yWt/webhook/chat/network-diagnostics`
+
+### Workflow Deployer
+**Does:** Deploys new or updated n8n workflows — imports JSON, activates, validates webhooks
+**Call when:** deploy workflow, import n8n workflow, activate workflow, update workflow, push workflow to n8n
+**URL:** `POST http://172.19.0.1:32769/webhook/Xc9PUYwnEzyWUoxJ/webhook/chat/workflow-deployer`
+
+---
+
+## SECURITY
+
+### Threat Scanner
+**Does:** Scans for security threats — suspicious processes, open ports, failed login attempts, anomalous behavior, CVEs
+**Call when:** security scan, threat check, scan for threats, security audit, check for vulnerabilities, intrusion detection, suspicious activity
+**URL:** `POST http://172.19.0.1:32769/webhook/q4XaqZAVE1yF2ABS/webhook/chat/threat-scanner`
+
+### Audit Logger
+**Does:** Records and queries security audit events; produces audit trails; searches event history
+**Call when:** audit log, security events, who did what, access log, event history, audit trail, compliance log
+**URL:** `POST http://172.19.0.1:32769/webhook/ATxAXqOoGvsEz6wf/webhook/chat/audit-logger`
+
+### Compliance Checker
+**Does:** Checks system configuration against security policies — secret exposure, permission drift, policy violations
+**Call when:** compliance check, policy check, is this compliant, security policy, permission audit, check configuration
+**URL:** `POST http://172.19.0.1:32769/webhook/VL46aM1DafKgV3C6/webhook/chat/compliance-checker`
+
+### Secret Rotator
+**Does:** Rotates API keys, tokens, and credentials; updates Infisical; notifies affected services
+**Call when:** rotate secrets, rotate API key, update credentials, refresh token, secret rotation, change password, expire key
+**URL:** `POST http://172.19.0.1:32769/webhook/YPwZ2B1ELjfm9RQh/webhook/chat/secret-rotator`
+
+---
+
+## TRADING
+
+### Market Analyzer
+**Does:** AI-powered market analysis for XAUUSD, US30, NAS100 — bias scoring (MFIB/MA stack/Stoch), trade setup identification, confluence analysis
+**Call when:** market analysis, analyze gold, analyze XAUUSD, market bias, what's the market doing, trade setup, technical analysis, market outlook
+**URL:** `POST http://172.19.0.1:32769/webhook/GDdumjIotZrXrC6P/webhook/chat/market-analyzer`
+
+### Risk Checker
+**Does:** Evaluates trade risk — position sizing, exposure limits, drawdown checks, max lot validation
+**Call when:** check risk, risk assessment, is this trade safe, position size, max risk, drawdown, lot size check
+**URL:** `POST http://172.19.0.1:32769/webhook/KWTLgiQmsrBNxuDh/webhook/chat/risk-checker`
+
+### Trading Executor
+**Does:** Executes trades on MT5 (demo or live) via the trade trigger webhook; requires user confirmation
+**Call when:** place trade, execute trade, buy XAUUSD, sell gold, open position, enter trade — ALWAYS CONFIRM BEFORE CALLING
+**URL:** `POST http://172.19.0.1:32769/webhook/CW1CSd3sieBQSo2I/webhook/chat/trading-executor`
+
+### Strategy Backtester
+**Does:** Backtests trading strategies against historical data using vizion-nn and indicator snapshots
+**Call when:** backtest, test strategy, historical performance, how would this have done, backtest results
+**URL:** `POST http://172.19.0.1:32769/webhook/o86lOMFGbwK4yS0i/webhook/chat/strategy-backtester`
+
+### Trend Detector
+**Does:** Identifies market trends — HH/HL/LH/LL structure, BOS/CHoCH, multi-timeframe trend alignment
+**Call when:** trend analysis, what's the trend, market structure, BOS, CHoCH, higher highs, trend direction
+**URL:** `POST http://172.19.0.1:32769/webhook/y0og7kVmXiN4IDgs/webhook/chat/trend-detector`
+
+### News Monitor
+**Does:** Monitors financial news and economic events; filters for high-impact catalysts affecting watched symbols
+**Call when:** news, economic events, high impact news, fed news, CPI, NFP, what's in the news, news catalyst
+**URL:** `POST http://172.19.0.1:32769/webhook/FJQUqGpMZPWCcDVp/webhook/chat/news-monitor`
+
+---
+
+## ANALYTICS
+
+### Data Analyst
+**Does:** Queries and analyzes data from PostgreSQL AIDB — trades, signals, platform metrics, custom queries
+**Call when:** data analysis, query database, analyze data, show me data, stats, metrics, database query, how many, chart data
+**URL:** `POST http://172.19.0.1:32769/webhook/8UyesOTnQZqqBmlE/webhook/chat/data-analyst`
+
+### Report Generator
+**Does:** Generates structured reports — trading performance, system health, cost summaries, workspace activity
+**Call when:** generate report, create report, performance report, summary report, weekly report, monthly report
+**URL:** `POST http://172.19.0.1:32769/webhook/3fiNEA0P88uYCFbH/webhook/chat/report-generator`
+
+### Analytics Aggregator
+**Does:** Aggregates analytics data across workspaces — social metrics, trading stats, platform-wide KPIs
+**Call when:** aggregate analytics, combined stats, platform metrics, aggregate data, rollup report, KPIs
+**URL:** `POST http://172.19.0.1:32769/webhook/fVtjp51rXuqftzD3/webhook/chat/analytics-aggregator`
+
+---
+
+## PLATFORM
+
+### Workspace Router
+**Does:** Routes any request to the correct specialist workspace/agent using AI reasoning — USE AS FALLBACK when unsure
+**Call when:** FALLBACK — any request you can't route confidently
+**URL:** `POST http://172.19.0.1:32769/webhook/zLdNy1r4gFPrHnZp/webhook/chat/workspace-router`
+
+### Task Dispatcher
+**Does:** Dispatches platform tasks to target workspaces; inserts into task queue; tracks completion
+**Call when:** dispatch task, send task to workspace, platform task, schedule a task for the team
+**URL:** `POST http://172.19.0.1:32769/webhook/Hzi7lEUTL4SlgvHD/webhook/chat/task-dispatcher`
+
+### Cross Workspace Sync
+**Does:** Synchronizes state and data across workspaces — memory sync, config replication, registry updates
+**Call when:** sync workspaces, cross-workspace sync, replicate config, sync state, workspace sync
+**URL:** `POST http://172.19.0.1:32769/webhook/Ipc0wNNHNO1d9wKh/webhook/chat/cross-workspace-sync`
+
+---
+
+## ONBOARDING
+
+### Client Setup
+**Does:** Sets up new clients — creates workspace scaffold, registers channels, imports credentials
+**Call when:** onboard client, new client, setup client, register client, create client workspace
+**URL:** `POST http://172.19.0.1:32769/webhook/BWLqZGH9pB24h2Xy/webhook/chat/client-setup`
+
+### Channel Configurator
+**Does:** Configures communication channels (WhatsApp, Telegram, Slack, Discord) for clients
+**Call when:** configure channel, setup WhatsApp, add Telegram, configure Discord, channel setup
+**URL:** `POST http://172.19.0.1:32769/webhook/QTWax1Oz5si4epky/webhook/chat/channel-configurator`
+
+### Validation Tester
+**Does:** Runs post-setup validation tests — verifies webhooks, tests credentials, confirms connectivity
+**Call when:** validate setup, test configuration, run tests, check setup, verify credentials, test webhooks
+**URL:** `POST http://172.19.0.1:32769/webhook/QMUoQwsyHpygRoqf/webhook/chat/validation-tester`
+
+### Workflow Deployer
+**Does:** Deploys n8n workflows for new workspace setups; activates and registers in registry
+**Call when:** deploy workspace workflows, setup workflows for client, import workflow package
+**URL:** `POST http://172.19.0.1:32769/webhook/Xc9PUYwnEzyWUoxJ/webhook/chat/workflow-deployer`
+
+---
+
+## MARKETING
+
+### Content Creator
+**Does:** Creates social media content — captions, post copy, hashtags, image prompts for Facebook/Instagram
+**Call when:** create content, write post, social media post, caption, marketing copy, draft content
+**URL:** `POST http://172.19.0.1:32769/webhook/LEXozqGWxNrmx0hV/webhook/chat/content-creator`
+
+### Lead Qualifier
+**Does:** Qualifies incoming leads — scores against criteria, determines next action, updates CRM data
+**Call when:** qualify lead, lead scoring, is this a good lead, evaluate prospect, lead follow-up
+**URL:** `POST http://172.19.0.1:32769/webhook/kbEA33mnJzL2FDqu/webhook/chat/lead-qualifier`
+
+### Social Poster
+**Does:** Posts content to social media platforms (Facebook, Instagram, LinkedIn) via configured APIs
+**Call when:** post to social, publish post, post on Facebook, share on Instagram, social post
+**URL:** `POST http://172.19.0.1:32769/webhook/fYJZsSHZroHlppjt/webhook/chat/social-poster`
+
+### Comment Responder
+**Does:** Drafts or sends responses to social media comments; manages comment moderation
+**Call when:** respond to comment, reply comment, comment moderation, social comment, reply to DM
+**URL:** `POST http://172.19.0.1:32769/webhook/hbaUNgJ5rAYAgflz/webhook/chat/comment-responder`
+
+---
+
+## ALERT & NOTIFICATIONS
+
+### Alert Router
+**Does:** Routes incoming system alerts to the correct handler workspace based on alert type and severity
+**Call when:** route alert, handle alert, alert triage, process system alert
+**URL:** `POST http://172.19.0.1:32769/webhook/mdMi7jaTdGQrdGi1/webhook/chat/alert-router`
+
+### Alert Aggregator
+**Does:** Aggregates and deduplicates alerts; produces alert summaries; manages alert fatigue
+**Call when:** aggregate alerts, alert summary, what alerts are there, summarize alerts, alert report
+**URL:** `POST http://172.19.0.1:32769/webhook/JuwnG2v1TZHZRWgc/webhook/chat/alert-aggregator`
+
+### Notification Sender
+**Does:** Sends notifications to configured channels (Telegram, WhatsApp, Discord) on behalf of the platform
+**Call when:** send notification, notify user, push notification, send message to channel, alert user
+**URL:** `POST http://172.19.0.1:32769/webhook/HQObBnsHLIybTlib/webhook/chat/notification-sender`
+
+---
+
+## SPECIAL / DIRECT ACCESS
+
+### EA AI Gateway
+**Does:** Multi-action gateway for MT5 EA integration — validate trades, get briefings, session info, news bias, report trades
+**Actions:** `ping`, `validate_trade`, `get_briefing`, `get_session`, `get_news_bias`, `report_trade`, `watchlist_status`
+**URL:** `POST http://172.19.0.1:32769/webhook/6VeJRjTNrrxCQK8u/webhook/ea-gateway`
+**Payload:** `{""action"": ""ping""}` or `{""action"": ""get_briefing"", ""symbol"": ""XAUUSD""}`
+
+### Trade Trigger
+**Does:** Executes MT5 trades directly — bypasses AI, goes straight to MT5 REST server (REQUIRES explicit user confirmation)
+**URL:** `POST http://172.19.0.1:32769/webhook/wf_trade_trigger_001/webhook/trade-trigger`
+**Payload:** `{""symbol"":""XAUUSD"",""direction"":""buy"",""volume"":0.01,""account"":""demo"",""sl_pips"":20,""tp_pips"":40}`
+
+### Lead Capture
+**Does:** Captures and stores new inbound leads from web forms or manual entry
+**URL:** `POST http://172.19.0.1:32769/webhook/6RXsJljW8z6KujCX/webhook/lead-capture`
+
+### Multi-Platform Publisher
+**Does:** Publishes the same content to multiple social platforms simultaneously
+**URL:** `POST http://172.19.0.1:32769/webhook/3lm99h8Q6MhfFlaZ/webhook/publish-multi-platform`
+
+### Alert Ingest
+**Does:** Ingests raw system alerts into the alert pipeline (internal system webhook)
+**URL:** `POST http://172.19.0.1:32769/webhook/UHmCR6VzI876gb75/webhook/vizion/alert/ingest`
+
+### Wiki Sync
+**Does:** Syncs the vizion-infra wiki to GitHub
+**URL:** `POST http://172.19.0.1:32769/webhook/u2cbrqVSJb0rhaci/webhook/vizion/infra/wiki-sync`
+
+---
+
+## OPENCLAW SUB-AGENTS (Native Delegation)
+
+These are full workspace agents — use when a task needs multi-step orchestration, memory, or workspace ownership.
+Invoke via OpenClaw's native sub-agent delegation (not via HTTP).
+
+| Sub-agent | Use for |
+|-----------|---------|
+| `trading` | Deep trading analysis, signal generation, MFIB/MA model, MT5 interaction |
+| `analytics` | Data analysis, report generation, trend analysis across workspaces |
+| `security` | Threat response, secrets management, compliance investigations, Infisical |
+| `platform` | Cross-workspace orchestration, registry management, task dispatch |
+| `maintenance` | System maintenance tasks, audit scheduling, disk/container hygiene |
+| `infra` | Architecture docs, wiki updates, DocOps cycles, audit snapshots |
+| `onboarding` | Full client onboarding flows, workspace scaffolding |
+| `marketing` | Social media strategy, content campaigns, lead management |
+| `scheduling` | Scheduling cron jobs, time-based tasks, reminder setup |
+| `alert-reporting` | Alert pipeline management, notification configuration |
+
+---
+
+## QUICK DECISION GUIDE
+
+```
+User asks to DO something
+    ├─ Matches a specific agent above? → Call it directly
+    ├─ Unclear which agent? → Route via Workspace Router
+    └─ Multi-step or needs memory? → Delegate to sub-agent
+
+User asks for INFORMATION
+    ├─ Platform status/health? → Health Checker or Data Analyst
+    ├─ Market/trading? → Market Analyzer or Trend Detector
+    └─ How to do something? → Check University at /workspaces/vizion-infra/learning/
+```","Semantic reference for all 39 active n8n AI agent workflows. Includes webhook URLs, payload format, response format, tier assignments (T0-T3), and model routing. Base URL: http://172.19.0.1:32769. Webhook pattern: POST {base}/webhook/{ID}/webhook/{PATH}.",migration,TRUE,operator,2026-02-19,2026-03-11
+How To: Access MT5 Terminal via VNC,how-to,vizion-trading,"mt5,vnc,docker,web-ui,ea,trading",active,"# MT5 Container (VNC) Access
+
+This system uses a Dockerized MT5 with web VNC.
+
+## Access URL
+- `https://mt5.vizionai.iamvisioncorp.org`
+- `https://mt5-live.vizionai.iamvisioncorp.org`
+
+## Container Details
+- Compose: `vizion-trading/infra/runtime/mt5-container/docker-compose.yml`
+- Container names: `vizion-mt5-demo`, `vizion-mt5-live`
+- Local ports: `3000` (demo), `3001` (live)
+
+## Basic Ops
+
+Start/stop:
+```bash
+cd /root/VizionAI/WORKSPACES/vizion-trading/infra/runtime/mt5-container
+
+docker compose up -d
+# docker compose down
+```
+
+## EA Mount
+- EA repo path mounted read‑only:
+  - `/root/VizionAI/WORKSPACES/vizion-trading/infra/mt5/ea`
+- Inside container:
+  - `/config/MQL5/Experts/vizion-ea`
+
+## Notes
+- Use the web UI to login and attach EAs.
+- Caddy reverse proxy terminates TLS.",Access the Dockerized MT5 Demo (port 3000) or Live (port 3001) terminal via web VNC at https://mt5-demo.vizionai.iamvisioncorp.org or https://mt5-live.vizionai.iamvisioncorp.org. EAs are mounted read-only from vizion-trading/infra/mt5/ea into /config/MQL5/Experts/vizion-ea inside the container.,migration,TRUE,operator,2026-02-16,2026-03-11
+How To: MT5 Low-Latency Copy Trade via ZeroMQ,how-to,vizion-trading,"mt5,zeromq,copytrade,bridge,trading,docker",active,"# MT5 Low‑Latency Copy Trade (Demo → Live)
+
+This setup uses ZeroMQ for low‑latency copy trading.
+
+## Topology
+- Demo MT5 publishes events (PUB) → `mt5-bridge-demo` (SUB)
+- Copytrade service forwards → `mt5-bridge-live` (DEALER)
+- Live MT5 executes
+
+## Containers
+- `vizion-mt5-demo` (port 3000)
+- `vizion-mt5-live` (port 3001)
+- `vizion-mt5-bridge-demo`
+- `vizion-mt5-bridge-live`
+- `vizion-mt5-copytrade`
+
+## Config Files
+- Demo bridge: `vizion-trading/infra/runtime/mt5-bridge/config/demo.env`
+- Live bridge: `vizion-trading/infra/runtime/mt5-bridge/config/live.env`
+- Copytrade: `vizion-trading/infra/runtime/mt5-bridge/config/copytrade.env`
+
+## EA Requirements
+Your MT5 EA must support ZMQ:
+- **Commands**: connect DEALER to `mt5-bridge-*:5011/5101` (per account)
+- **Events**: bind PUB to `:5012/5022/5102/5202` inside MT5
+
+## Start/Stop
+```bash
+cd /root/VizionAI/WORKSPACES/vizion-trading/infra/runtime/mt5-container
+
+docker compose up -d
+# docker compose down
+```
+
+## Notes
+- Demo → Live copy direction is set in `copytrade.env`.
+- For other directions, swap endpoints.",Sets up ZMQ-based copy trading: Demo MT5 publishes events (PUB) → mt5-bridge-demo (SUB) → copytrade service (DEALER) → Live MT5 executes. EA must connect DEALER to mt5-bridge-*:5011/5101 and bind PUB to :5012/5022/5102/5202. Copy direction set in copytrade.env.,migration,TRUE,operator,2026-02-16,2026-03-11
+ADR 0001: Secrets Management — Infisical over Self-Hosted Vault,decision-record,vizion-infra,"secrets,infisical,vault,adr,security,decision",active,"# ADR 0001: Vault + Secrets Model
+
+## Status
+Accepted
+
+## Decision
+Use centralized secrets management and avoid storing secrets in repos. Vaultwarden is used for human credential management. Runtime services use scoped secrets injected via environment and/or secrets manager.
+
+## Consequences
+- Audit trail for secret access
+- Clear separation between human credentials and service tokens",Decision: Use centralized secrets management (Infisical cloud) instead of self-hosted Vault. No secrets stored in repos. Runtime services use scoped environment injection. Audit trail for all secret access. Vaultwarden used only for human credential management.,migration,TRUE,operator,2026-02-16,2026-03-11
+Runbook: Deploy or Update an n8n Workflow via API,runbook,vizion-infra,"n8n,workflow,deployment,api,versioning",active,"# Deploy / Update n8n Workflow via API
+
+## Steps
+1. **Get current version**: GET /api/v1/workflows/{id} — capture versionId
+2. **PATCH the workflow**: PATCH /api/v1/workflows/{id} with updated nodes JSON
+3. **Sync activeVersionId** (critical):
+```sql
+UPDATE workflow_entity SET ""activeVersionId""=""versionId"" WHERE id='{id}';
+INSERT INTO workflow_published_version (""workflowId"",""publishedVersionId"")
+VALUES ('{id}','{vid}') ON CONFLICT DO UPDATE SET ""publishedVersionId""='{vid}';
+```
+4. **Restart n8n container** to re-register webhooks cleanly:
+```bash
+docker restart n8n-hxq9-n8n-1
+```
+
+## Notes
+- Never rely on API deactivate/reactivate alone for webhook registration
+- Always use workflowId-prefixed webhook format: /webhook/{wfId}/webhook/{path}
+- Webhook node names must be exactly 'Webhook' — no spaces
+- Cron nodes are invalid in n8n 2.x — use scheduleTrigger v1.2","Procedure for deploying or updating n8n workflows via API. Critical steps: sync activeVersionId in DB after API PATCH, full container restart for webhook registration. Avoid deactivate/reactivate alone — unreliable.",manual,TRUE,operator,2026-02-19,2026-03-11
+Runbook: Restart OpenClaw and Verify Model Routing,runbook,vizion-infra,"openclaw,restart,model-routing,troubleshooting",active,"# Restart OpenClaw and Verify Model Routing
+
+## Steps
+1. **Edit config on HOST** (not inside container):
+   - Config: /docker/openclaw-xbkt/data/.openclaw/openclaw.json
+   - Auth profiles: /docker/openclaw-xbkt/data/.openclaw/agents/main/agent/auth-profiles.json
+
+2. **Restart container**:
+```bash
+docker restart openclaw-xbkt-openclaw-1
+```
+
+3. **Check health**:
+```bash
+curl -sf http://127.0.0.1:48950/ && echo OK
+```
+
+4. **Verify model resolution** — send a test message via Telegram or WhatsApp and check logs:
+```bash
+docker logs openclaw-xbkt-openclaw-1 --tail 50
+```
+
+## Model Priority (current)
+- Primary: google/gemini-2.5-flash (auto-detected, 1M ctx)
+- Fallback 1: google/gemini-2.0-flash
+- Fallback 2: openrouter/openrouter/free
+- Fallback 3: openrouter/meta-llama/llama-3.3-70b-instruct:free
+
+## Key Rules
+- Never edit config inside container — OpenClaw may be read-only or overwrite
+- Never define manual google provider block — causes 404 on Telegram
+- Use openrouter/ prefix for OpenRouter models, not bare anthropic/ or meta-llama/","Procedure for restarting OpenClaw and verifying model routing is correct. Key rules: edit HOST config file only, never define manual google provider, use full model path prefixes in primary/fallbacks.",manual,TRUE,operator,2026-02-26,2026-03-11
+Runbook: MT5 Container Health Check and Recovery,runbook,vizion-trading,"mt5,health-check,recovery,wine,rpyc,socat",active,"# MT5 Container Health Check and Recovery
+
+## Health Check
+```bash
+# REST server health
+curl http://172.19.0.1:18900/health
+
+# Container status
+docker inspect vizion-mt5-demo --format '{{.State.Status}}'
+docker inspect vizion-mt5-live --format '{{.State.Status}}'
+
+# rpyc connectivity
+python3 -c ""import rpyc; c=rpyc.connect('172.21.0.2',18812); print(c.root.ping())""
+```
+
+## Common Fixes
+
+### socat missing (err=5203)
+```bash
+docker exec -u root vizion-mt5-demo apt-get install -y socat
+```
+
+### Wine command fails as root
+```bash
+# WRONG: docker exec vizion-mt5-demo wine ...
+# CORRECT:
+docker exec -u abc vizion-mt5-demo wine python.exe -m pip list
+```
+
+### numpy >= 2.0 installed
+```bash
+docker exec -u abc vizion-mt5-demo wine python.exe -m pip install 'numpy<2.0'
+```
+
+### Full container restart
+```bash
+cd /root/VizionAI/WORKSPACES/vizion-trading/infra/runtime/mt5-container
+docker compose restart vizion-mt5-demo
+```","Health check and recovery procedures for MT5 Demo and Live containers. Covers socat installation, Wine -u abc flag, numpy downgrade, and container restart steps.",manual,TRUE,operator,2026-03-02,2026-03-11
+Runbook: Rotate Secrets via Infisical,runbook,vizion-infra,"infisical,secrets,rotation,security",active,"# Rotate Secrets via Infisical
+
+## Projects
+- Infrastructure: 918f6641-7111-4c80-b08a-46321c6b81ab
+- Business: f67a6490-4cc1-489d-a6eb-98fe995b0539
+
+## Login (Universal Auth)
+```bash
+infisical login --method=universal-auth \
+  --client-id=bc08fecf-9154-4e6a-9525-80e0e8f6b576 \
+  --client-secret=<from SECRETS_ORGANIZATION_FINAL.md> \
+  --plain
+```
+
+## Key Secret Paths
+- AI Keys: /platform/api/keys/ai-providers
+- API Tokens: /platform/api/tokens
+- Service URLs: /platform/api/urls
+- n8n credentials: /n8n
+- OpenClaw config: /openclaw
+- Airtable Library: /platform/api/tokens/providers
+
+## Rotation Steps
+1. Generate new secret value in the external service
+2. Update in Infisical: infisical secrets set KEY=VALUE --env=prod --path=/...
+3. Restart consuming containers to pick up new value
+4. Verify service health after restart
+
+## Naming Convention
+Format: {SCOPE}_{SERVICE}_{KEY}
+Example: AI_ANTHROPIC_API_KEY, AIRTABLE_LIBRARY_TOKEN","Procedure for rotating secrets stored in Infisical. Covers login with universal-auth, key secret paths, rotation steps, and naming convention.",manual,TRUE,operator,2026-02-16,2026-03-11
+Runbook: Add or Update n8n Credential,runbook,vizion-infra,"n8n,credentials,api,airtable,gemini",active,"# Add or Update n8n Credential
+
+## Via n8n UI (preferred)
+1. Go to https://n8n.vizionai.iamvisioncorp.org/credentials
+2. Click New Credential → select type
+3. Fill in fields (see notes for each type below)
+4. Save — note the generated credential ID
+
+## Via API
+```bash
+curl -X POST http://172.19.0.1:32769/api/v1/credentials \
+  -H ""X-N8N-API-KEY: $N8N_API_KEY"" \
+  -H ""Content-Type: application/json"" \
+  -d '{""name"":""Name"",""type"":""openAiApi"",""data"":{""apiKey"":""sk-..."",""baseUrl"":""...""}}'
+```
+
+## Known Credential IDs
+| Name | ID | Type |
+|------|----|------|
+| OpenRouter account | 9a8L86PX0yHKHdfY | openRouterApi |
+| VizionAI PostgreSQL | SwbG9UjrENs6DHXW | postgres |
+| Anthropic VizionAI | UAadGmk5tLCPd8bL | anthropicApi |
+| OpenAI VizionAI | NOFBorblh1Gkvi0w | openAiApi |
+| Gemini VizionAI | GJSyeDqYqXZ3DZjE | openAiApi (Gemini baseURL) |
+| Airtable Library | (created 2026-03) | airtableTokenApi |
+
+## Notes
+- openAiApi: set header: false explicitly (otherwise 400 error about headerName)
+- Gemini baseURL: https://generativelanguage.googleapis.com/v1beta/openai/
+- airtableTokenApi: use Personal Access Token (PAT) from Airtable Developer Hub","Procedure for adding or updating n8n credentials. Includes known credential IDs for Gemini, OpenRouter, PostgreSQL, Anthropic, and Airtable Library.",manual,TRUE,operator,2026-02-19,2026-03-11

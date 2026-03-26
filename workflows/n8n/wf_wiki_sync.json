@@ -30,5 +30,6 @@
     "Webhook Trigger": {"main": [[{"node": "Sync Wiki", "type": "main", "index": 0}]]},
     "Sync Wiki": {"main": [[{"node": "Respond", "type": "main", "index": 0}]]}
   },
+  "active": false,
   "settings": {"executionOrder": "v1"}
 }

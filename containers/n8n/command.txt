@@ -1,1 +1,19 @@
-# docker run or compose command for n8n
+# n8n external task runner compose
+#
+# Secrets are loaded from Infisical at runtime.
+# If Infisical DNS is unavailable, the launcher falls back to the local runtime cache or the live n8n container env.
+# Platform secrets: /platform/n8n, /n8n, /database/postgres, /social/facebook, /social/telegram
+# Business secrets: /clients/diamondreamers, /n8n-workflows
+#
+# Expected auth:
+# - INFISICAL_TOKEN, or
+# - INFISICAL_CLIENT_ID + INFISICAL_CLIENT_SECRET
+#
+# Shared debug tooling:
+# - `docker compose up -d toolbox` for curl/jq/dig/psql/traceroute without bloating n8n
+#
+# Optional overrides:
+# - INFISICAL_PROJECT_INFRA_ID
+# - INFISICAL_PROJECT_BUSINESS_ID
+# - INFISICAL_ENV
+./run_with_infisical.sh

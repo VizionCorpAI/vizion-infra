@@ -19,5 +19,6 @@
     }
   ],
   "connections": {"Every 2m": {"main": [[{"node": "Consume Tasks", "type": "main", "index": 0}]]}},
+  "active": false,
   "settings": {"executionOrder": "v1"}
 }

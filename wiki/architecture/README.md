@@ -24,9 +24,3 @@ Canonical system architecture for VizionAI. This is the single source of truth f
 
 ## ADRs
 - `adr/` for architecture decision records.
-
-## Audit Snapshots
-- `audit/` contains timestamped HTML + Markdown snapshots.
-
-## ADRs
-- `adr/` for architecture decision records.

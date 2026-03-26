@@ -1,0 +1,95 @@
+services:
+  n8n:
+    image: ${N8N_IMAGE:-vizionai-n8n:latest}
+    restart: unless-stopped
+    ports:
+      - "${N8N_HOST_PORT:-32769}:5678"
+    environment:
+      NODE_ENV: production
+      TZ: ${TZ:-America/Phoenix}
+      GENERIC_TIMEZONE: ${GENERIC_TIMEZONE:-America/Phoenix}
+      DB_TYPE: postgresdb
+      DB_POSTGRESDB_HOST: ${DB_POSTGRESDB_HOST:-postgresql-pv9y-postgresql-1}
+      DB_POSTGRESDB_PORT: ${DB_POSTGRESDB_PORT:-5432}
+      DB_POSTGRESDB_DATABASE: ${DB_POSTGRESDB_DATABASE:-AIDB}
+      DB_POSTGRESDB_USER: ${DB_POSTGRESDB_USER:-VizionAI}
+      DB_POSTGRESDB_PASSWORD: ${DB_POSTGRESDB_PASSWORD}
+      N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS: "true"
+      N8N_SECURE_COOKIE: "false"
+      N8N_SKIP_AUTH_ON_OAUTH_CALLBACK: "false"
+      N8N_API_DISABLED: "false"
+      N8N_COMMUNITY_PACKAGES_ENABLED: "true"
+      N8N_BLOCK_ENV_ACCESS_IN_NODE: "false"
+      NODES_EXCLUDE: ${NODES_EXCLUDE:-[]}
+      N8N_RUNNERS_MODE: external
+      N8N_RUNNERS_AUTH_TOKEN: ${N8N_RUNNERS_AUTH_TOKEN}
+      N8N_RUNNERS_BROKER_LISTEN_ADDRESS: 0.0.0.0
+      N8N_RUNNERS_BROKER_PORT: "5679"
+      DD_CLIENT_KEY: ${DD_CLIENT_KEY:-DIAMONDREAMERS}
+      DD_FB_PAGE_ID: ${DD_FB_PAGE_ID}
+      DD_IG_ACCOUNT_ID: ${DD_IG_ACCOUNT_ID}
+      DD_THREADS_USER_ID: ${DD_THREADS_USER_ID}
+      DD_THREADS_TOKEN: ${DD_THREADS_TOKEN}
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+      FACEBOOK_PAGE_TOKEN: ${FACEBOOK_PAGE_TOKEN}
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+      N8N_OWNER_EMAIL: ${N8N_OWNER_EMAIL:-admin@iamvisioncorp.org}
+      N8N_OWNER_PASSWORD: ${N8N_OWNER_PASSWORD}
+      N8N_OWNER_FIRST_NAME: ${N8N_OWNER_FIRST_NAME:-VizionAI}
+      N8N_OWNER_LAST_NAME: ${N8N_OWNER_LAST_NAME:-Admin}
+      N8N_EDITOR_BASE_URL: ${N8N_EDITOR_BASE_URL:-http://127.0.0.1:32769/}
+      WEBHOOK_URL: ${WEBHOOK_URL:-http://127.0.0.1:32769/}
+      N8N_RESTRICT_FILE_ACCESS_TO: /root/VizionAI/WORKSPACES,/home/node/.n8n
+    volumes:
+      - n8n_data:/home/node/.n8n
+      - /root/VizionAI/WORKSPACES:/root/VizionAI/WORKSPACES:rw
+      - /root/VizionAI/secrets:/root/VizionAI/secrets:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - default
+      - postgresql
+
+  n8n-runners:
+    image: ${N8N_RUNNERS_IMAGE:-n8nio/runners:2.7.4}
+    restart: unless-stopped
+    depends_on:
+      - n8n
+    environment:
+      N8N_RUNNERS_AUTH_TOKEN: ${N8N_RUNNERS_AUTH_TOKEN}
+      N8N_RUNNERS_TASK_BROKER_URI: http://n8n:5679
+      N8N_RUNNERS_AUTO_SHUTDOWN_TIMEOUT: "15"
+      N8N_RUNNERS_LAUNCHER_LOG_LEVEL: info
+      N8N_RUNNERS_MAX_CONCURRENCY: "5"
+      GENERIC_TIMEZONE: ${GENERIC_TIMEZONE:-America/Phoenix}
+      NODE_FUNCTION_ALLOW_BUILTIN: ${NODE_FUNCTION_ALLOW_BUILTIN:-}
+      NODE_FUNCTION_ALLOW_EXTERNAL: ${NODE_FUNCTION_ALLOW_EXTERNAL:-}
+      N8N_RUNNERS_STDLIB_ALLOW: ${N8N_RUNNERS_STDLIB_ALLOW:-}
+      N8N_RUNNERS_EXTERNAL_ALLOW: ${N8N_RUNNERS_EXTERNAL_ALLOW:-}
+      N8N_BLOCK_RUNNER_ENV_ACCESS: "true"
+    networks:
+      - default
+      - postgresql
+
+  toolbox:
+    build:
+      context: ./toolbox
+    image: ${N8N_TOOLBOX_IMAGE:-vizionai-n8n-toolbox:latest}
+    restart: unless-stopped
+    dns:
+      - 1.1.1.1
+      - 8.8.8.8
+    tty: true
+    stdin_open: true
+    environment:
+      TZ: ${TZ:-America/Phoenix}
+    command: ["sleep", "infinity"]
+    networks:
+      - default
+
+volumes:
+  n8n_data:
+
+networks:
+  postgresql:
+    external: true
+    name: postgresql-pv9y_default

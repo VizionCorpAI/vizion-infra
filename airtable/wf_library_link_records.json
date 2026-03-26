@@ -1,0 +1,485 @@
+{
+  "name": "wf_library_link_records",
+  "nodes": [
+    {
+      "id": "t-manual",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        200
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "t-webhook",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        0,
+        380
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "library/link-records",
+        "responseMode": "responseNode",
+        "options": {}
+      }
+    },
+    {
+      "id": "t-schedule",
+      "name": "Weekly Sunday 04:00",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        560
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 4 * * 0"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "respond",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        220,
+        380
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\"status\":\"accepted\",\"message\":\"Library link-records job started\"}",
+        "options": {
+          "responseCode": 200
+        }
+      }
+    },
+    {
+      "id": "f-svc",
+      "name": "Fetch Services",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        440,
+        380
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.airtable.com/v0/appVnA7GVfUVfvBM0/Services?pageSize=100",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer AIRTABLE_TOKEN_PLACEHOLDER"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "f-prb",
+      "name": "Fetch Problems",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        660,
+        380
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.airtable.com/v0/appVnA7GVfUVfvBM0/Problems?pageSize=100",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer AIRTABLE_TOKEN_PLACEHOLDER"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "f-art",
+      "name": "Fetch Articles",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        880,
+        380
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.airtable.com/v0/appVnA7GVfUVfvBM0/Articles?pageSize=100",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer AIRTABLE_TOKEN_PLACEHOLDER"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "f-rec",
+      "name": "Fetch Recommendations",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        1100,
+        380
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.airtable.com/v0/appVnA7GVfUVfvBM0/Recommendations?pageSize=100",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer AIRTABLE_TOKEN_PLACEHOLDER"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "f-sig",
+      "name": "Fetch Signals",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        1320,
+        380
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.airtable.com/v0/appVnA7GVfUVfvBM0/Signals?pageSize=100",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer AIRTABLE_TOKEN_PLACEHOLDER"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "f-prm",
+      "name": "Fetch Prompts",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        1540,
+        380
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.airtable.com/v0/appVnA7GVfUVfvBM0/Agent%20Prompts?pageSize=100",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer AIRTABLE_TOKEN_PLACEHOLDER"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "compute",
+      "name": "Compute Patches",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1760,
+        380
+      ],
+      "parameters": {
+        "jsCode": "\nconst svcRecords  = $('Fetch Services').first().json.records        || [];\nconst probRecords = $('Fetch Problems').first().json.records         || [];\nconst artRecords  = $('Fetch Articles').first().json.records         || [];\nconst recRecords  = $('Fetch Recommendations').first().json.records  || [];\nconst sigRecords  = $('Fetch Signals').first().json.records          || [];\nconst prmRecords  = $('Fetch Prompts').first().json.records          || [];\n\nfunction buildMap(records, field) {\n  const m = {};\n  for (const r of records) { const v = r.fields && r.fields[field]; if (v) m[String(v).trim().toLowerCase()] = r.id; }\n  return m;\n}\nfunction uniq(arr) { return [...new Set(arr.filter(Boolean))]; }\n// Handle Airtable multi-select (array) or CSV text (comma-string)\nfunction toTags(v) {\n  if (!v) return [];\n  if (Array.isArray(v)) return v.map(t => String(t).trim().toLowerCase());\n  return String(v).split(',').map(t => t.trim().toLowerCase());\n}\n\nconst svcMap  = buildMap(svcRecords,  'name');\nconst probMap = buildMap(probRecords, 'title');\nconst artMap  = buildMap(artRecords,  'title');\nconst recMap  = buildMap(recRecords,  'title');\n\nconst TAG_SVC = {\n  'openclaw':['OpenClaw','WhatsApp (OpenClaw Channel)'],\n  'n8n':['n8n','Alert Ingest Webhook','EA AI Gateway','Trade Trigger Webhook'],\n  'postgresql':['PostgreSQL AIDB'], 'mt5':['MT5 Demo Terminal','MT5 Live Terminal','MT5 Copytrade','MT5 REST Server'],\n  'trading':['EA AI Gateway','Trade Trigger Webhook','MT5 REST Server'],\n  'caddy':['Caddy Reverse Proxy'], 'telegram':['Telegram Bot'], 'whatsapp':['WhatsApp (OpenClaw Channel)'],\n  'gemini':['Gemini API (Google)'], 'openrouter':['OpenRouter'], 'infisical':['Infisical (Secrets)'],\n  'monitoring':['Alert Ingest Webhook'], 'security':['Infisical (Secrets)'],\n  'analytics':['NN Server'], 'backup':['PostgreSQL AIDB'], 'networking':['Caddy Reverse Proxy'],\n};\nconst AGENT_SVC = {\n  'workspace-router':['OpenClaw','n8n'],\n  'market-analyzer':['EA AI Gateway','NN Server','MT5 Demo Terminal'],\n  'risk-checker':['EA AI Gateway','MT5 Demo Terminal','MT5 Live Terminal'],\n  'resource-monitor':['OpenClaw','n8n','PostgreSQL AIDB','Caddy Reverse Proxy','MT5 Demo Terminal','MT5 Live Terminal','NN Server'],\n  'signal-classifier':['Alert Ingest Webhook','n8n'],\n  'ea-gateway':['EA AI Gateway','MT5 Demo Terminal','MT5 Live Terminal','MT5 REST Server'],\n  'health-checker':['OpenClaw','n8n','PostgreSQL AIDB','MT5 REST Server','NN Server'],\n};\nconst TAG_PROB_KW = {\n  'openclaw':['openclaw'],'n8n':['n8n'],'mt5':['mt5','wine','socat','numpy'],\n  'openrouter':['openrouter'],'gemini':['openclaw telegram','google provider'],\n};\nconst REC_PROB_KW = {'openrouter':['openrouter'],'mt5':['mt5','wine','socat','numpy'],'openclaw':['openclaw'],'n8n':['n8n']};\n\nconst patches = [];\nfunction addPatch(table, record, newFields) {\n  const has = Object.values(newFields).some(v => Array.isArray(v) ? v.length > 0 : Boolean(v));\n  if (!has) return;\n  patches.push({ table, recordId: record.id, fields: newFields });\n}\n\n// Pass 1: Problems \u2192 Services\nfor (const r of probRecords) {\n  const raw = (r.fields && r.fields.affected_services) || '';\n  const rawSvcs = Array.isArray(raw) ? raw : String(raw).split(',');\n  addPatch('Problems', r, { linked_services: uniq(rawSvcs.map(s => svcMap[String(s).trim().toLowerCase()])) });\n}\n// Pass 2: Articles \u2192 Services\nfor (const r of artRecords) {\n  const tags = toTags(r.fields && r.fields.tags);\n  addPatch('Articles', r, { linked_services: uniq(tags.flatMap(t=>(TAG_SVC[t]||[]).map(n=>svcMap[n.toLowerCase()]))) });\n}\n// Pass 3: Articles \u2192 Problems\nfor (const r of artRecords) {\n  const cat = ((r.fields && r.fields.category)||'').toLowerCase();\n  if (cat==='architecture'||cat==='decision-record') continue;\n  const tags = toTags(r.fields && r.fields.tags);\n  addPatch('Articles', r, { linked_problems: uniq(tags.flatMap(t=>(TAG_PROB_KW[t]||[]).flatMap(kw=>Object.entries(probMap).filter(([k])=>k.includes(kw)).map(([,id])=>id)))) });\n}\n// Pass 4: Recommendations \u2192 Articles\nfor (const r of recRecords) {\n  const text=(((r.fields&&r.fields.title)||'')+' '+((r.fields&&r.fields.description)||'')).toLowerCase();\n  addPatch('Recommendations', r, { linked_articles: uniq(Object.entries(artMap).filter(([k])=>k.split(' ').filter(w=>w.length>4).slice(0,4).some(w=>text.includes(w))).map(([,id])=>id)) });\n}\n// Pass 5: Recommendations \u2192 Problems\nfor (const r of recRecords) {\n  const text=(((r.fields&&r.fields.title)||'')+' '+((r.fields&&r.fields.description)||'')).toLowerCase();\n  addPatch('Recommendations', r, { linked_problems: uniq(Object.entries(REC_PROB_KW).filter(([d])=>text.includes(d)).flatMap(([,kws])=>kws.flatMap(kw=>Object.entries(probMap).filter(([k])=>k.includes(kw)).map(([,id])=>id)))) });\n}\n// Pass 6: Signals\nfor (const r of sigRecords) {\n  const result=((r.fields&&r.fields.resulted_in)||'').toLowerCase();\n  const content=(((r.fields&&r.fields.summary)||'')+' '+((r.fields&&r.fields.raw_content)||'')).toLowerCase();\n  const kw=(map)=>uniq(Object.entries(map).filter(([k])=>k.length>=5&&content.includes(k)).map(([,id])=>id));\n  const p={};\n  if(result==='article'){const ids=kw(artMap);if(ids.length)p.linked_article=[ids[0]];}\n  else if(result==='problem'){const ids=kw(probMap);if(ids.length)p.linked_problem=[ids[0]];}\n  else if(result==='recommendation'){const ids=kw(recMap);if(ids.length)p.linked_recommendation=[ids[0]];}\n  addPatch('Signals', r, p);\n}\n// Pass 7: Prompts \u2192 Services\nfor (const r of prmRecords) {\n  const agent=((r.fields&&r.fields.agent)||'').toLowerCase().trim();\n  addPatch('Prompts', r, { linked_services: uniq((AGENT_SVC[agent]||[]).map(n=>svcMap[n.toLowerCase()])) });\n}\n\nreturn patches.map(p => ({ json: p }));\n"
+      }
+    },
+    {
+      "id": "loop",
+      "name": "Loop Patches",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1980,
+        380
+      ],
+      "parameters": {
+        "batchSize": 1,
+        "options": {}
+      }
+    },
+    {
+      "id": "patch",
+      "name": "Apply Patch",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        2200,
+        240
+      ],
+      "parameters": {
+        "method": "PATCH",
+        "url": "=https://api.airtable.com/v0/appVnA7GVfUVfvBM0/{{ $json.table }}/{{ $json.recordId }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer AIRTABLE_TOKEN_PLACEHOLDER"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={\"fields\":{{ JSON.stringify($json.fields) }}}",
+        "options": {}
+      }
+    },
+    {
+      "id": "summary",
+      "name": "Build Summary",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2200,
+        520
+      ],
+      "parameters": {
+        "jsCode": "\nconst all   = $input.all();\nconst ok    = all.filter(i => !i.json.error).length;\nconst errs  = all.length - ok;\nconst summary = '\u2705 *VizionAI Library \u2014 Links Refreshed*\\n\\n' +\n  '\ud83d\udd17 Patches applied: ' + ok + '\\n\u274c Errors: ' + errs + '\\n' +\n  '_7 passes: Problems\u2192Svcs, Articles\u2192Svcs, Articles\u2192Problems, Recs\u2192Arts, Recs\u2192Problems, Signals, Prompts\u2192Svcs_';\nreturn [{ json: { summary, ok, errs } }];\n"
+      }
+    },
+    {
+      "id": "telegram",
+      "name": "Notify Telegram",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        2420,
+        520
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.telegram.org/bot8408221035:AAHdCrMQuedmtJPxWiZnzGHEwNT0JTC3ScM/sendMessage",
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "chat_id",
+              "value": "8195552085"
+            },
+            {
+              "name": "text",
+              "value": "={{ $json.summary }}"
+            },
+            {
+              "name": "parse_mode",
+              "value": "Markdown"
+            }
+          ]
+        },
+        "options": {}
+      }
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Fetch Services",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Weekly Sunday 04:00": {
+      "main": [
+        [
+          {
+            "node": "Fetch Services",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook": {
+      "main": [
+        [
+          {
+            "node": "Fetch Services",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Services": {
+      "main": [
+        [
+          {
+            "node": "Fetch Problems",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Problems": {
+      "main": [
+        [
+          {
+            "node": "Fetch Articles",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Articles": {
+      "main": [
+        [
+          {
+            "node": "Fetch Recommendations",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Recommendations": {
+      "main": [
+        [
+          {
+            "node": "Fetch Signals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Signals": {
+      "main": [
+        [
+          {
+            "node": "Fetch Prompts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Prompts": {
+      "main": [
+        [
+          {
+            "node": "Compute Patches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compute Patches": {
+      "main": [
+        [
+          {
+            "node": "Loop Patches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Patches": {
+      "main": [
+        [
+          {
+            "node": "Apply Patch",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Build Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Apply Patch": {
+      "main": [
+        [
+          {
+            "node": "Loop Patches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Summary": {
+      "main": [
+        [
+          {
+            "node": "Notify Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null
+}
