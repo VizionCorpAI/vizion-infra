@@ -110,8 +110,7 @@ fields = {
   'source_reference': '$(echo "$source_ref" | sed "s/'/\\\\'/g")',
   'workspace': '$(echo "${workspace:-vizion-infra}" | sed "s/'/\\\\'/g")',
   'severity': '$(echo "$severity" | sed "s/'/\\\\'/g")',
-  'summary': '$(echo "$summary" | head -c 500 | sed "s/'/\\\\'/g")',
-  'raw_content': '$(echo "$payload_json" | head -c 1000 | sed "s/'/\\\\'/g")',
+  'summary': '$(echo "$summary" | head -c 280 | sed "s/'/\\\\'/g")',
   'status': 'unprocessed',
   'tags': '$(echo "$tags" | sed "s/'/\\\\'/g")',
 }
@@ -169,20 +168,80 @@ SQL
   esac
 
   if command -v curl >/dev/null 2>&1 && [ -n "$_airtable_token" ]; then
-    _promoted_body=$(python3 -c "
+    _promoted_body=$(ENTRY_TYPE="$entry_type" TITLE="$title" SUMMARY="$summary" SOURCE_SYSTEM="$source_system" WORKSPACE="${workspace:-vizion-infra}" TAGS="$tags" SOURCE_REF="$source_ref" PAYLOAD_JSON="$payload_json" AT_CATEGORY="$_at_category" python3 - <<'PY'
 import json
+import os
+
+def as_text(value, limit=None):
+    text = "" if value is None else str(value)
+    if limit is not None and len(text) > limit:
+        return text[:limit].rstrip() + "…"
+    return text
+
+def as_csv(value):
+    if value is None:
+        return ""
+    if isinstance(value, list):
+        return ", ".join(str(v).strip() for v in value if str(v).strip())
+    return as_text(value)
+
+entry_type = os.environ.get("ENTRY_TYPE", "problem")
+title = as_text(os.environ.get("TITLE"), 255)
+summary = as_text(os.environ.get("SUMMARY"), 500)
+source_system = as_text(os.environ.get("SOURCE_SYSTEM"))
+workspace = as_text(os.environ.get("WORKSPACE"), 255) or "vizion-infra"
+tags = as_csv(os.environ.get("TAGS"))
+source_ref = as_text(os.environ.get("SOURCE_REF"))
+at_category = as_text(os.environ.get("AT_CATEGORY"))
+
+try:
+    payload = json.loads(os.environ.get("PAYLOAD_JSON", "{}"))
+except Exception:
+    payload = {}
+
 fields = {
-  'title': '$(echo "$title" | head -c 255 | sed "s/\"/\\\\\"/g; s/'/\\\\x27/g")',
-  'summary': '$(echo "$summary" | head -c 500 | sed "s/\"/\\\\\"/g; s/'/\\\\x27/g")',
-  'status': 'draft',
-  'source': '$(echo "$source_system" | sed "s/\"/\\\\\"/g")',
-  'workspace': '$(echo "${workspace:-vizion-infra}" | sed "s/\"/\\\\\"/g")',
-  'tags': '$(echo "$tags" | sed "s/\"/\\\\\"/g")',
-  'created_by': 'learning_ingest',
+    "title": title,
+    "summary": summary,
+    "source": source_system,
+    "workspace": workspace,
+    "tags": tags,
+    "created_by": "learning_ingest",
 }
-$([ -n "$_at_category" ] && echo "fields['category'] = '$_at_category'" || echo "")
-print(json.dumps({'records': [{'fields': fields}]}))
-" 2>/dev/null)
+
+if entry_type == "problem":
+    fields.update({
+        "symptom": as_text(payload.get("symptom") or summary, 180),
+        "root_cause": as_text(payload.get("root_cause") or payload.get("details") or "", 220),
+        "fix": as_text(payload.get("fix") or payload.get("solution") or "", 220),
+        "prevention": as_text(payload.get("prevention") or "", 180),
+        "category": at_category or as_text(payload.get("category") or "general"),
+        "status": as_text(payload.get("status") or ("resolved" if (payload.get("fix") or payload.get("solution")) else "open")),
+        "affected_services": as_csv(payload.get("affected_services")),
+    })
+elif entry_type == "how_to":
+    fields.update({
+        "category": at_category or as_text(payload.get("category") or "how-to"),
+        "content": as_text(payload.get("details") or payload.get("solution") or summary, 4000),
+        "summary": summary,
+        "status": as_text(payload.get("status") or "active"),
+    })
+elif entry_type == "recommendation":
+    fields.update({
+        "description": as_text(payload.get("details") or summary, 4000),
+        "impact": as_text(payload.get("impact") or "", 300),
+        "priority": as_text(payload.get("priority") or "medium"),
+        "status": as_text(payload.get("status") or "pending"),
+    })
+else:
+    fields.update({
+        "category": at_category or as_text(payload.get("category") or "reference"),
+        "content": as_text(payload.get("details") or payload.get("solution") or summary, 4000),
+        "status": as_text(payload.get("status") or "active"),
+    })
+
+print(json.dumps({"records": [{"fields": fields}]}))
+PY
+)
     if [ -n "$_promoted_body" ]; then
       curl -s -X POST \
         -H "Authorization: Bearer $_airtable_token" \

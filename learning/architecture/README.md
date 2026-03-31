@@ -1,11 +1,7 @@
 # Architecture
 
-Canonical architecture notes and diagram references for the system.
-Reference wiki artifacts only if needed; this directory is the primary source.
-
-# Architecture Wiki
-
-Canonical system architecture for VizionAI. This is the single source of truth for all workspaces.
+Detailed architecture chapters and diagram references for the system.
+This directory backs the canonical overview in `../../wiki/architecture/README.md`.
 
 ## Index
 1. `00_system_overview.md`
@@ -18,12 +14,12 @@ Canonical system architecture for VizionAI. This is the single source of truth f
 8. `06_security_model.md`
 9. `07_workspace_model.md`
 10. `08_maintenance_audit.md`
+11. `workspace_responsibility_matrix.md`
 
 ## Diagrams
 - `diagrams/system.mmd`
 - `diagrams/runtime_ports.mmd`
 - `diagrams/execution_flow.mmd`
--
 ## Audit Snapshots
 - `audit/` contains timestamped HTML + Markdown snapshots.
 

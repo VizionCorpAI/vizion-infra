@@ -28,7 +28,6 @@ flowchart LR
     MAINT[vizion-maintenance] --> ALERTS
     ANA[vizion-analytics] --> ALERTS
     NN[vizion-nn.service\n:8000] --> TRD
-    VW[Vaultwarden\n:32768] --- UI[(RDP/Xorg Browser)]
   end
 ```","VizionAI is a multi-workspace platform with a central control plane (vizion-platform), central scheduler (vizion-scheduling), telemetry via vizion-alert-reporting, and domain workspaces for trading, marketing, and onboarding. All workspaces register to the platform and receive dispatched tasks.",migration,TRUE,operator,2026-02-16,2026-03-11
 "Runtime Topology — Containers, Ports, and Services",architecture,vizion-infra,"architecture,docker,ports,topology,runtime",active,"# Runtime Topology
@@ -37,7 +36,6 @@ flowchart LR
 - OpenClaw: `0.0.0.0:48950`
 - n8n: `0.0.0.0:32769`
 - Postgres: `0.0.0.0:32770`
-- Vaultwarden: `0.0.0.0:32768`
 
 ## Services
 - NN server: `vizion-nn.service` on `:8000`
@@ -47,7 +45,6 @@ flowchart LR
 - NN: `http://127.0.0.1:8000/health`
 - OpenClaw: `http://127.0.0.1:48950/`
 - n8n: `http://127.0.0.1:32769/`
-- Vaultwarden: `http://127.0.0.1:32768/`","Documents all container host-port mappings (OpenClaw 48950, n8n 32769, PostgreSQL 32770), systemd services (NN server on 8000, vizion-scheduling-runner.timer), and health check endpoints for the VPS runtime.",migration,TRUE,operator,2026-02-16,2026-03-11
 Execution Flow — Orchestration and Task Dispatch,architecture,vizion-infra,"architecture,orchestration,scheduler,platform-task,execution-flow",active,"# Orchestration
 
 ## Central Scheduler (single orchestrator)
@@ -513,11 +510,11 @@ ADR 0001: Secrets Management — Infisical over Self-Hosted Vault,decision-recor
 Accepted
 
 ## Decision
-Use centralized secrets management and avoid storing secrets in repos. Vaultwarden is used for human credential management. Runtime services use scoped secrets injected via environment and/or secrets manager.
+Use centralized secrets management and avoid storing secrets in repos. Infisical is the sole secrets source of truth. Runtime services use scoped secrets injected via environment and/or secrets manager.
 
 ## Consequences
 - Audit trail for secret access
-- Clear separation between human credentials and service tokens",Decision: Use centralized secrets management (Infisical cloud) instead of self-hosted Vault. No secrets stored in repos. Runtime services use scoped environment injection. Audit trail for all secret access. Vaultwarden used only for human credential management.,migration,TRUE,operator,2026-02-16,2026-03-11
+- Clear separation between human credentials and service tokens",Decision: Use centralized secrets management (Infisical cloud) instead of self-hosted Vault. No secrets stored in repos. Runtime services use scoped environment injection. Audit trail for all secret access. Infisical is used for all secret management.,migration,TRUE,operator,2026-02-16,2026-03-11
 Runbook: Deploy or Update an n8n Workflow via API,runbook,vizion-infra,"n8n,workflow,deployment,api,versioning",active,"# Deploy / Update n8n Workflow via API
 
 ## Steps
@@ -671,3 +668,4 @@ curl -X POST http://172.19.0.1:32769/api/v1/credentials \
 - openAiApi: set header: false explicitly (otherwise 400 error about headerName)
 - Gemini baseURL: https://generativelanguage.googleapis.com/v1beta/openai/
 - airtableTokenApi: use Personal Access Token (PAT) from Airtable Developer Hub","Procedure for adding or updating n8n credentials. Includes known credential IDs for Gemini, OpenRouter, PostgreSQL, Anthropic, and Airtable Library.",manual,TRUE,operator,2026-02-19,2026-03-11
+Runbook: Retrain vizion-nn from MT5 labeled rows,runbook,vizion-trading,"trading,mt5,nn,training,labels",active,"Full article text stays in the local learning plane; use summary, tags, and source metadata here.","Explains how the MT5 deal-history labels written by NNDataLogger feed the vizion-nn retraining loop, including sample checks, backfill expectations, and when to pause retraining for insufficient data.",manual,TRUE,operator,2026-03-26,2026-03-26

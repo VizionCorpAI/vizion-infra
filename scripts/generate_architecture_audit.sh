@@ -30,10 +30,10 @@ esc_html() {
   sed -e 's/&/&amp;/g' -e 's/</&lt;/g' -e 's/>/&gt;/g'
 }
 
-timers="$(cmd_or_true "systemctl list-timers --all --no-pager | rg -n 'vizion-|n8n|openclaw|vaultwarden|monarx' || true")"
-services="$(cmd_or_true "systemctl list-units --type=service --all --no-pager | rg -n 'vizion-|n8n|openclaw|vaultwarden|monarx|xrdp' || true")"
+timers="$(cmd_or_true "systemctl list-timers --all --no-pager | rg -n 'vizion-|n8n|openclaw|monarx' || true")"
+services="$(cmd_or_true "systemctl list-units --type=service --all --no-pager | rg -n 'vizion-|n8n|openclaw|monarx|xrdp' || true")"
 docker_ps="$(cmd_or_true "timeout 5s docker ps --format 'table {{.Names}}\t{{.Image}}\t{{.Ports}}' || true")"
-ports="$(cmd_or_true "timeout 5s ss -ltnp | rg -n '(:48950|:32769|:32768|:32770|:8000|:5432|:3276[0-9])' || true")"
+ports="$(cmd_or_true "timeout 5s ss -ltnp | rg -n '(:48950|:32769|:32770|:8000|:5432|:3276[0-9])' || true")"
 
 ws_overview="$(cmd_or_true "cd \"$WORKSPACES\" && ls -1 | rg -n '^vizion-' || true")"
 
@@ -57,7 +57,6 @@ legacy_registry_sql="$(cmd_or_true "sed -n '1,260p' \"$INFRA/sql/legacy/001_work
 nn_health="$(cmd_or_true "curl -s --max-time 5 http://127.0.0.1:8000/health || true")"
 openclaw_head="$(cmd_or_true "curl -s -I --max-time 5 http://127.0.0.1:48950/ | head -n 5 || true")"
 n8n_head="$(cmd_or_true "curl -s -I --max-time 5 http://127.0.0.1:32769/ | head -n 5 || true")"
-vw_head="$(cmd_or_true "curl -s -I --max-time 5 http://127.0.0.1:32768/ | head -n 8 || true")"
 
 openclaw_skills_ls="$(cmd_or_true "ls -la /docker/openclaw-xbkt/data/skills 2>/dev/null | head -n 200 || true")"
 
@@ -77,7 +76,6 @@ flowchart LR
     MAINT[vizion-maintenance] --> ALERTS
     ANA[vizion-analytics] --> ALERTS
     NN[vizion-nn.service\n:8000] --> TRD
-    VW[Vaultwarden\n:32768] --- UI[(RDP/Xorg Browser)]
   end
 MERMAID
 )"
@@ -140,13 +138,12 @@ cat >"$html" <<HTML
       <li>NN: <code>http://127.0.0.1:8000/health</code></li>
       <li>OpenClaw: <code>http://127.0.0.1:48950/</code></li>
       <li>n8n: <code>http://127.0.0.1:32769/</code></li>
-      <li>Vaultwarden: <code>http://127.0.0.1:32768/</code></li>
     </ul>
   </div>
   <h3>NN Health JSON</h3>
   <pre>$(printf "%s" "$nn_health" | esc_html)</pre>
-  <h3>HTTP HEAD (OpenClaw / n8n / Vaultwarden)</h3>
-  <pre>$(printf "%s\n%s\n%s" "$openclaw_head" "$n8n_head" "$vw_head" | esc_html)</pre>
+  <h3>HTTP HEAD (OpenClaw / n8n)</h3>
+  <pre>$(printf "%s\n%s" "$openclaw_head" "$n8n_head" | esc_html)</pre>
 
   <h2>Workspaces</h2>
   <h3>Workspace Directories</h3>
@@ -181,7 +178,7 @@ cat >"$html" <<HTML
       <li>Keep scheduler as the only recurring systemd timer; ensure per-workspace timers remain disabled.</li>
       <li>Resolve git DNS failures if they recur (observed previously as transient).</li>
       <li>Converge legacy infra SQL registry to the platform registry or remove it to avoid confusion.</li>
-      <li>Vaultwarden: configure <code>ADMIN_TOKEN</code> using an Argon2 PHC hash (Vaultwarden logs warn about plaintext token).</li>
+      <li>Use Infisical for all secrets and rotate credentials through the security workspace; no legacy secrets store remains in the architecture path.</li>
     </ul>
   </div>
 </body>

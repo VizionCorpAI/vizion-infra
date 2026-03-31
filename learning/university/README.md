@@ -1,7 +1,7 @@
 # Learning University
 
-This is the human-friendly entrypoint to the learning plane.
-Use it as the front door for operators, agents, and analysts.
+This is the human-friendly front door for the learning plane.
+Use `../README.md` for the canonical scope and this page for quick navigation.
 
 ## What lives here
 - Pointers to the most important learning assets
@@ -15,12 +15,6 @@ Use it as the front door for operators, agents, and analysts.
 - architecture notes: ../architecture/
 - state snapshots: ../state/
 - ingestion rules: ../ingest/
-
-## Operating Model
-- signals arrive from alerts, maintenance, analytics, and security
-- curated entries become actionable recommendations
-- outcomes are measured and written back into learning
-- summaries are refreshed and used by platform during task dispatch
 
 ## Automation
 - learning promotion: /root/VizionAI/WORKSPACES/vizion-infra/scripts/learning_promote.sh

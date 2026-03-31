@@ -39,7 +39,7 @@ CROSS JOIN LATERAL (
     :'entry_type',
     COALESCE(c.title, c.summary, 'Signal ' || c.fingerprint),
     c.summary,
-    NULL,
+    NULLIF(COALESCE(c.payload->>'solution', c.payload->>'fix', c.payload->>'details', c.summary), ''),
     NULLIF((c.payload->>'workspace'), ''),
     c.source_system,
     c.source_ref,
@@ -100,5 +100,44 @@ print(json.dumps({'records': records[:10]}))  # Airtable max 10 per batch
     fi
   else
     echo "airtable: no unprocessed signals to promote"
+  fi
+fi
+
+AIRTABLE_SIGNAL_RETENTION_DAYS=${AIRTABLE_SIGNAL_RETENTION_DAYS:-30}
+if command -v curl >/dev/null 2>&1 && [ -n "$_airtable_token" ] && [ "${AIRTABLE_SIGNAL_RETENTION_DAYS:-0}" -gt 0 ] 2>/dev/null; then
+  _prune_formula="AND(OR({status}='promoted',{status}='discarded',{status}='in-review'), IS_BEFORE({created_at}, DATEADD(NOW(), -${AIRTABLE_SIGNAL_RETENTION_DAYS}, 'days')))"
+  _old_signals=$(curl -s -G \
+    -H "Authorization: Bearer $_airtable_token" \
+    --data-urlencode "filterByFormula=$_prune_formula" \
+    --data-urlencode "pageSize=100" \
+    "https://api.airtable.com/v0/$_airtable_base/Signals" 2>/dev/null)
+
+  _old_count=$(echo "$_old_signals" | python3 -c "
+import sys, json
+d = json.load(sys.stdin)
+print(len(d.get('records', [])))
+" 2>/dev/null || echo "0")
+
+  if [ "$_old_count" -gt 0 ] 2>/dev/null; then
+    echo "airtable: trimming $_old_count stale signal rows older than ${AIRTABLE_SIGNAL_RETENTION_DAYS} days"
+    echo "$_old_signals" | python3 -c "
+import sys, json
+d = json.load(sys.stdin)
+for i in range(0, len(d.get('records', [])), 10):
+    chunk = d['records'][i:i+10]
+    ids = [r['id'] for r in chunk if 'id' in r]
+    if ids:
+        print(' '.join(ids))
+" 2>/dev/null | while read -r ids; do
+      [ -z "$ids" ] && continue
+      _delete_args=""
+      for id in $ids; do
+        _delete_args="$_delete_args --data-urlencode records[]=$id"
+      done
+      eval curl -s -X DELETE -G \
+        -H "Authorization: Bearer $_airtable_token" \
+        $_delete_args \
+        "https://api.airtable.com/v0/$_airtable_base/Signals" >/dev/null 2>&1 || true
+    done
   fi
 fi

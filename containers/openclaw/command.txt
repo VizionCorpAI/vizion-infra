@@ -1,1 +1,3 @@
 # docker run or compose command for OpenClaw
+# Report OpenClaw issues with:
+# /root/VizionAI/WORKSPACES/vizion-infra/scripts/report_openclaw_issue.sh

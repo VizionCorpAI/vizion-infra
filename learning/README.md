@@ -11,6 +11,8 @@ any external search.
 - Frequent problems and proven fixes
 - Recommendations derived from analytics, alerts, and maintenance
 - Learning entries linked to source events (alerts, audits, or tasks)
+- External web captures that are cleaned and summarized before promotion into learning or Airtable
+- Shared intake/output records and filing drafts routed through `vizion-input-output`
 
 ## Structure
 - frequent_problems/: Real incidents and recurring issues with root cause and fix.
@@ -25,11 +27,16 @@ any external search.
 - Every entry must have a source (alert, audit, maintenance, analytics).
 - Avoid storing secrets or personal data. Reference Infisical paths instead.
 - Recommendations should be actionable and assigned an owner workspace.
+- Public web content should enter through a capture step like `crawl4ai`, then be reduced to compact notes, tags, and source links.
 
 ## Automation
 - learning ingest: /root/VizionAI/WORKSPACES/vizion-infra/scripts/learning_ingest.sh
 - promotion job: /root/VizionAI/WORKSPACES/vizion-infra/scripts/learning_promote.sh
+- issue reporter: /root/VizionAI/WORKSPACES/vizion-infra/scripts/report_learning_issue.sh
 - summaries: /root/VizionAI/WORKSPACES/vizion-infra/scripts/learning_refresh_all_summaries.sh
+- intake/output workspace: /root/VizionAI/WORKSPACES/vizion-input-output/
+- Airtable library mirror: /root/VizionAI/WORKSPACES/vizion-infra/airtable/library/
+- Airtable receives compact summaries, tags, statuses, and links only. Keep raw logs and long-form notes in the local learning plane.
 
 ## Database
 The learning plane is backed by database tables defined in:

@@ -21,7 +21,6 @@
 |----------|----|---------|--------|
 | DocOps Weekly | TBD | Weekly Sunday 02:00 | pending |
 | Wiki Sync | TBD | On-demand / after DocOps | pending |
-| Audit Snapshot Daily | TBD | Daily 05:00 | pending |
 | Platform Tasks Consumer | TBD | Every 2 min | pending |
 
 ## Scripts
@@ -34,3 +33,4 @@
 | wiki_sync.sh | Push wiki/ to GitHub Wiki repo |
 | docops_run.sh | Full DocOps cycle (capture → update → regenerate → sync) |
 | regenerate_memory.sh | Regenerate MEMORY.md for all workspaces |
+| report_learning_issue.sh | Capture issues/fixes into the learning plane and Airtable mirror |

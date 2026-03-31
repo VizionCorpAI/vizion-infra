@@ -27,6 +27,5 @@ flowchart LR
     MAINT[vizion-maintenance] --> ALERTS
     ANA[vizion-analytics] --> ALERTS
     NN[vizion-nn.service\n:8000] --> TRD
-    VW[Vaultwarden\n:32768] --- UI[(RDP/Xorg Browser)]
   end
 ```

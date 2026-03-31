@@ -9,3 +9,6 @@ Template:
 - Validation
 - Rollback
 - Sources
+
+## Guides
+- [Web Capture with crawl4ai](./crawl4ai_web_capture.md)

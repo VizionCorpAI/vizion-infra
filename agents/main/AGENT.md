@@ -1,5 +1,9 @@
 # Main Agent (vizion-infra)
 
+## Policy Loader
+- Read `../../vizion-security/docs/POLICY_INDEX.json` before making cross-workspace changes.
+- Use `../../vizion-security/docs/POLICY_INDEX.md` for the human-readable policy reference.
+
 ## Purpose
 Central orchestrator for documentation, templates, audit snapshots, and DocOps automation.
 

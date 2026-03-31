@@ -11,6 +11,7 @@
 #
 # Shared debug tooling:
 # - `docker compose up -d toolbox` for curl/jq/dig/psql/traceroute without bloating n8n
+# - issue capture: `/root/VizionAI/WORKSPACES/vizion-infra/scripts/report_n8n_issue.sh`
 #
 # Optional overrides:
 # - INFISICAL_PROJECT_INFRA_ID
